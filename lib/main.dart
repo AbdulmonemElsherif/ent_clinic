@@ -9,12 +9,29 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
-}
+        return MaterialApp(
+          title: 'ENT Clinic Management System',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: const HomePage(),
+        );
+      }
+    }
+    
+    class HomePage extends StatelessWidget {
+      const HomePage({super.key});
+    
+      @override
+      Widget build(BuildContext context) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('ENT Clinic Management System'),
+          ),
+          body: const Center(
+            child: Text('Welcome to the ENT Clinic Management System'),
+          ),
+        );
+      }
+    }

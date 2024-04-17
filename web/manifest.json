@@ -1,11 +1,11 @@
 {
-    "name": "ent_clinic",
-    "short_name": "ent_clinic",
+    "name": "ENT Clinic Management System",
+    "short_name": "ENT Clinic",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#5CDB95",
+    "theme_color": "#379683",
+    "description": "Manage your ENT clinic operations efficiently with our Clinic Management System.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
