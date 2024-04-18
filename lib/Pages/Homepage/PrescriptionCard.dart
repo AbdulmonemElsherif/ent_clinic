@@ -6,10 +6,10 @@ class PrescriptionCard extends StatelessWidget {
   final String dosage;
 
   const PrescriptionCard({
-    Key? key,
+    super.key,
     required this.medicine,
     required this.dosage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class PrescriptionCard extends StatelessWidget {
               children: [
                 Text(
                   'Medicine: $medicine',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -46,7 +46,7 @@ class PrescriptionCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'Dosage: $dosage',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),

@@ -5,16 +5,16 @@ class PrescriptionPage extends StatelessWidget {
   final String dosage;
 
   const PrescriptionPage({
-    Key? key,
+    super.key,
     required this.medicine,
     required this.dosage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Prescription Details'),
+        title: const Text('Prescription Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -23,7 +23,7 @@ class PrescriptionPage extends StatelessWidget {
           children: [
             Text(
               'Medicine: $medicine',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -31,7 +31,7 @@ class PrescriptionPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Dosage: $dosage',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),
