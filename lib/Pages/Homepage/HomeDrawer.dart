@@ -1,6 +1,7 @@
-import 'package:ent_clinic/Pages/SignIn.dart';
 import 'package:flutter/material.dart';
+import 'package:ent_clinic/Pages/SignIn.dart';
 import 'package:ent_clinic/Pages/profile.dart';
+import 'package:ent_clinic/Pages/Homepage/AboutUs.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({Key? key}) : super(key: key);
@@ -19,8 +20,6 @@ class HomeDrawer extends StatelessWidget {
               onTap: () {
                 // Navigate to profile page
                 Navigator.pop(context); // Close the drawer first
-                // Navigate to profile screen
-                // Replace 'ProfilePage()' with your actual profile screen widget
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ProfilePage()),
@@ -54,6 +53,16 @@ class HomeDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               // Navigate to services screen
+            },
+          ),
+          ListTile(
+            title: const Text('About Us'),
+            onTap: () {
+              Navigator.pop(context);
+                 Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AboutUsPage()),
+            );
             },
           ),
           ListTile(
