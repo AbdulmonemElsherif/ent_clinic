@@ -4,7 +4,7 @@ import 'package:ent_clinic/Pages/profile.dart';
 import 'package:ent_clinic/Pages/Homepage/AboutUs.dart';
 
 class HomeDrawer extends StatelessWidget {
-  const HomeDrawer({Key? key}) : super(key: key);
+  const HomeDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class HomeDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.blue,
             ),
             child: GestureDetector(
@@ -22,10 +22,10 @@ class HomeDrawer extends StatelessWidget {
                 Navigator.pop(context); // Close the drawer first
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
                 );
               },
-              child: Row(
+              child: const Row(
                 children: [
                   // Add user icon here
                   Icon(Icons.account_circle, size: 48, color: Colors.white),
@@ -61,7 +61,7 @@ class HomeDrawer extends StatelessWidget {
               Navigator.pop(context);
                  Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AboutUsPage()),
+              MaterialPageRoute(builder: (context) => const AboutUsPage()),
             );
             },
           ),
