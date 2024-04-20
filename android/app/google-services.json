@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "426304167882",
+    "project_id": "ent-clinic-b89c8",
+    "storage_bucket": "ent-clinic-b89c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:426304167882:android:e125931d454682df593933",
+        "android_client_info": {
+          "package_name": "com.example.ent_clinic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNYUVyxYuyJohhcwJmm7BPTmP8-8mxmbA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

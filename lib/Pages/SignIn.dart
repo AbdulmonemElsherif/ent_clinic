@@ -1,78 +1,105 @@
 import 'package:flutter/material.dart';
-import 'HomePage/homepage.dart'; // Import the HomePage widget
+import 'package:firebase_auth/firebase_auth.dart';
+import 'HomePage/homepage.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign In'),
+        title: Text('Sign In'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Username',
-                border: const OutlineInputBorder(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 16.0),
-            const TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
+              SizedBox(height: 16.0),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // Simulate successful sign-in for demonstration purposes
-                // Replace this with your actual sign-in logic
-                _signIn(context);
-              },
-              child: const Text('Sign In'),
-            ),
-            const SizedBox(height: 8.0),
-            TextButton(
-              onPressed: () {
-                _skipSignIn(context);
-              },
-              child: const Text('Skip Sign In'),
-            ),
-          ],
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _signIn,
+                child: Text(
+                  'Sign In',
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
+                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Function to handle sign-in
-  void _signIn(BuildContext context) {
-    // Simulate successful sign-in for demonstration purposes
-    // Replace this with your actual sign-in logic
-    bool isAuthenticated = true; // Assume user is authenticated
-
-    if (isAuthenticated) {
-      // Navigate to the home page (HomePage)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } else {
-      // Handle sign-in failure, show error message, etc.
+  Future<void> _signIn() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        // Navigate to the next page if the sign-in was successful
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } on FirebaseAuthException catch (e) {
+        String message;
+        if (e.code == 'user-not-found') {
+          message = 'No user found for that email.';
+        } else if (e.code == 'wrong-password') {
+          message = 'Wrong password provided for that user.';
+        } else {
+          message = 'Something went wrong. Please try again later.';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
-  }
-
-  // Function to handle skipping sign-in
-  void _skipSignIn(BuildContext context) {
-    // Navigate to the home page (HomePage)
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
   }
 }
