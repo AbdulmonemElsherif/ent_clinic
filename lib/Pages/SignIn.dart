@@ -39,9 +39,14 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _buildLogo() {
-    return Image.asset('lib/assets/images/ent_clinic.jpg');
+    return AspectRatio(
+      aspectRatio: 16 / 9,  // Adjust the aspect ratio as needed
+      child: Image.asset(
+        'lib/assets/images/ent_clinic.jpg',
+        fit: BoxFit.cover,
+      ),
+    );
   }
-
   Widget _buildWelcomeText() {
     return Column(
       children: <Widget>[
