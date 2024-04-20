@@ -25,74 +25,109 @@ class _SignInPageState extends State<SignInPage> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              Image.asset('lib/assets/images/ent_clinic.jpg'), 
-              SizedBox(height: 16.0),
-              Text(
-                'Welcome back!',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-    
-              SizedBox(height: 16.0),
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.0),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: _signIn,
-                child: Text(
-                  'Sign In',
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
-                ),
-              ),
-              SizedBox(height: 16.0),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()),
-                  );
-                },
-                child: Text(
-                  'New user? Sign Up',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-              ),
+              _buildLogo(),
+              _buildWelcomeText(),
+              _buildEmailField(),
+              _buildPasswordField(),
+              _buildSignInButton(),
+              _buildSignUpButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Image.asset('lib/assets/images/ent_clinic.jpg');
+  }
+
+  Widget _buildWelcomeText() {
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 16.0),
+        Text(
+          'Welcome back!',
+          style: TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 16.0),
+      ],
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: _emailController,
+      decoration: InputDecoration(
+        labelText: 'Email',
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your email';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 16.0),
+        TextFormField(
+          controller: _passwordController,
+          decoration: InputDecoration(
+            labelText: 'Password',
+            border: OutlineInputBorder(),
+          ),
+          obscureText: true,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your password';
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: 16.0),
+      ],
+    );
+  }
+
+  Widget _buildSignInButton() {
+    return ElevatedButton(
+      onPressed: _signIn,
+      child: Text(
+        'Sign In',
+        style: TextStyle(color: Colors.white),
+      ),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
+        padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
+      ),
+    );
+  }
+
+  Widget _buildSignUpButton() {
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 16.0),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignUpPage()),
+            );
+          },
+          child: Text(
+            'New user? Sign Up',
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
+        ),
+      ],
     );
   }
 
@@ -103,7 +138,6 @@ class _SignInPageState extends State<SignInPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-        // Navigate to the next page if the sign-in was successful
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),

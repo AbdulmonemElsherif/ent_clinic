@@ -31,114 +31,163 @@ class _SignUpPageState extends State<SignUpPage> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              ListTile(
-                title: const Text('Patient'),
-                leading: Radio<UserType>(
-                  value: UserType.patient,
-                  groupValue: _userType,
-                  onChanged: (UserType? value) {
-                    setState(() {
-                      _userType = value!;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Doctor'),
-                leading: Radio<UserType>(
-                  value: UserType.doctor,
-                  groupValue: _userType,
-                  onChanged: (UserType? value) {
-                    setState(() {
-                      _userType = value!;
-                    });
-                  },
-                ),
-              ),
-              if (_userType == UserType.doctor)
-                TextFormField(
-                  controller: _specializationController,
-                  decoration: const InputDecoration(
-                    labelText: 'Specialization',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your specialization';
-                    }
-                    return null;
-                  },
-                ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: _registerUser,
-                child: const Text('Sign Up'),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-                  padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignInPage()),
-                  );
-                },
-                child: Text(
-                  'Already have an account? Sign In',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-              ),
+              _buildNameField(),
+              _buildEmailField(),
+              _buildPasswordField(),
+              _buildUserTypeRadioButtons(),
+              if (_userType == UserType.doctor) _buildSpecializationField(),
+              _buildSignUpButton(),
+              _buildSignInButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildNameField() {
+    return Column(
+      children: <Widget>[
+        TextFormField(
+          controller: _nameController,
+          decoration: const InputDecoration(
+            labelText: 'Full Name',
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your full name';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 16.0),
+      ],
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: _emailController,
+      decoration: const InputDecoration(
+        labelText: 'Email',
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your email';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return Column(
+      children: <Widget>[
+        const SizedBox(height: 16.0),
+        TextFormField(
+          controller: _passwordController,
+          decoration: const InputDecoration(
+            labelText: 'Password',
+            border: OutlineInputBorder(),
+          ),
+          obscureText: true,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your password';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 16.0),
+      ],
+    );
+  }
+
+  Widget _buildUserTypeRadioButtons() {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: const Text('Patient'),
+          leading: Radio<UserType>(
+            value: UserType.patient,
+            groupValue: _userType,
+            onChanged: (UserType? value) {
+              setState(() {
+                _userType = value!;
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Doctor'),
+          leading: Radio<UserType>(
+            value: UserType.doctor,
+            groupValue: _userType,
+            onChanged: (UserType? value) {
+              setState(() {
+                _userType = value!;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSpecializationField() {
+    return Column(
+      children: <Widget>[
+        TextFormField(
+          controller: _specializationController,
+          decoration: const InputDecoration(
+            labelText: 'Specialization',
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your specialization';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 16.0),
+      ],
+    );
+  }
+
+  Widget _buildSignUpButton() {
+    return ElevatedButton(
+      onPressed: _registerUser,
+      child: const Text(
+        'Sign Up',
+        style: TextStyle(color: Colors.white),
+      ),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
+        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
+      ),
+    );
+  }
+
+  Widget _buildSignInButton() {
+    return Column(
+      children: <Widget>[
+        const SizedBox(height: 16.0),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignInPage()),
+            );
+          },
+          child: Text(
+            'Already have an account? Sign In',
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
+        ),
+      ],
     );
   }
 
