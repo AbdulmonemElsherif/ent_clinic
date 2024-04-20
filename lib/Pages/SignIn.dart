@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'HomePage/homepage.dart';
+import 'Signup.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -22,9 +23,19 @@ class _SignInPageState extends State<SignInPage> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
             children: <Widget>[
+              Image.asset('lib/assets/images/ent_clinic.jpg'), 
+              SizedBox(height: 16.0),
+              Text(
+                'Welcome back!',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+    
+              SizedBox(height: 16.0),
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -63,6 +74,19 @@ class _SignInPageState extends State<SignInPage> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
                   padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpPage()),
+                  );
+                },
+                child: Text(
+                  'New user? Sign Up',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
               ),
             ],
