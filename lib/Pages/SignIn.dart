@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'HomePage/homepage.dart';
 import 'Signup.dart';
+import 'ResetPassword.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -103,36 +104,47 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _buildSignInButton() {
-    return ElevatedButton(
-      onPressed: _signIn,
-      child: Text(
-        'Sign In',
-        style: TextStyle(color: Colors.white),
-      ),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
-      ),
-    );
-  }
-
-  Widget _buildSignUpButton() {
     return Column(
       children: <Widget>[
-        SizedBox(height: 16.0),
+        ElevatedButton(
+          onPressed: _signIn,
+          child: Text(
+            'Sign In',
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
+            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
+          ),
+        ),
         TextButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SignUpPage()),
+              MaterialPageRoute(builder: (context) => ResetPassword()),
             );
           },
           child: Text(
-            'New user? Sign Up',
+            'Forgot password?',
             style: TextStyle(color: Theme.of(context).primaryColor),
           ),
         ),
       ],
+    );
+  }
+  
+  Widget _buildSignUpButton() {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SignUpPage()),
+        );
+      },
+      child: Text(
+        'New user? Sign Up',
+        style: TextStyle(color: Theme.of(context).primaryColor),
+      ),
     );
   }
 
