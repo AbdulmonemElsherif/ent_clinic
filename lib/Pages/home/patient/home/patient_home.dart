@@ -1,9 +1,9 @@
+import 'package:ent_clinic/Pages/appointment/create_appointment_page.dart';
+import 'package:ent_clinic/Pages/prescription/create_prescription_page.dart';
 import 'package:flutter/material.dart';
-import 'HomeDrawer.dart';
-import 'AppointmentCard.dart';
-import 'PrescriptionCard.dart'; // Import PrescriptionCard widget
-import '../CreateAppointmentPage.dart';
-import '../CreatePrescriptionPage.dart'; // Import CreatePrescriptionPage widget
+import 'home_drawer.dart';
+import 'appointment_card.dart';
+import 'prescription_card.dart'; // Import PrescriptionCard widget// Import CreatePrescriptionPage widget
 
 class Appointment {
   final String doctorName;
@@ -19,14 +19,14 @@ class Prescription {
   Prescription(this.medicine, this.dosage);
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class PatientHomePage extends StatefulWidget {
+  const PatientHomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _PatientHomePageState createState() => _PatientHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PatientHomePageState extends State<PatientHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final List<Appointment> appointments = [
@@ -38,7 +38,6 @@ class _HomePageState extends State<HomePage> {
     Appointment('Dr. John Doe', DateTime(2024, 4, 18, 10, 0)),
     Appointment('Dr. John Doe', DateTime(2024, 4, 18, 10, 0)),
     Appointment('Dr. John Doe', DateTime(2024, 4, 18, 10, 0)),
-   
   ];
 
   final List<Prescription> prescriptions = [
@@ -53,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     Prescription('Medicine C', '3 pills before meals'),
   ];
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,

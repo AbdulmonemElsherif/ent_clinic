@@ -121,11 +121,6 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
               onPressed: () {
                 if (selectedDoctor != null && selectedReason != null) {
                   // Implement appointment creation logic
-                  print('Appointment Details:');
-                  print('Doctor: $selectedDoctor');
-                  print('Date: $selectedDate');
-                  print('Time: $selectedTime');
-                  print('Reason: $selectedReason');
                 } else {
                   showDialog(
                     context: context,

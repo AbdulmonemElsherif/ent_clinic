@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'HomePage/homepage.dart';
-import 'Signup.dart';
-import 'ResetPassword.dart';
+import '../home/patient/home/patient_home.dart';
+import 'reset_password.dart';
+import 'signup.dart';
 
 class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -18,7 +20,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign In'),
+        title: const Text('Sign In'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -41,15 +43,16 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget _buildLogo() {
     return AspectRatio(
-      aspectRatio: 16 / 9,  // Adjust the aspect ratio as needed
+      aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
       child: Image.asset(
-        'lib/assets/images/ent_clinic.jpg',
+        'assets/images/ent_clinic.jpg',
         fit: BoxFit.cover,
       ),
     );
   }
+
   Widget _buildWelcomeText() {
-    return Column(
+    return const Column(
       children: <Widget>[
         SizedBox(height: 16.0),
         Text(
@@ -67,7 +70,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget _buildEmailField() {
     return TextFormField(
       controller: _emailController,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Email',
         border: OutlineInputBorder(),
       ),
@@ -83,10 +86,10 @@ class _SignInPageState extends State<SignInPage> {
   Widget _buildPasswordField() {
     return Column(
       children: <Widget>[
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         TextFormField(
           controller: _passwordController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Password',
             border: OutlineInputBorder(),
           ),
@@ -98,7 +101,7 @@ class _SignInPageState extends State<SignInPage> {
             return null;
           },
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
       ],
     );
   }
@@ -108,13 +111,15 @@ class _SignInPageState extends State<SignInPage> {
       children: <Widget>[
         ElevatedButton(
           onPressed: _signIn,
-          child: Text(
+          child: const Text(
             'Sign In',
             style: TextStyle(color: Colors.white),
           ),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
+            backgroundColor:
+                MaterialStateProperty.all(Theme.of(context).primaryColor),
+            padding: MaterialStateProperty.all(
+                const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
           ),
         ),
         TextButton(
@@ -132,13 +137,13 @@ class _SignInPageState extends State<SignInPage> {
       ],
     );
   }
-  
+
   Widget _buildSignUpButton() {
     return TextButton(
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SignUpPage()),
+          MaterialPageRoute(builder: (context) => const SignUpPage()),
         );
       },
       child: Text(
@@ -151,13 +156,14 @@ class _SignInPageState extends State<SignInPage> {
   Future<void> _signIn() async {
     if (_formKey.currentState!.validate()) {
       try {
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const PatientHomePage()),
         );
       } on FirebaseAuthException catch (e) {
         String message;
@@ -171,7 +177,7 @@ class _SignInPageState extends State<SignInPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(message),
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
           ),
         );
       }

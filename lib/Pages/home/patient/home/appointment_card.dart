@@ -1,5 +1,5 @@
+import 'package:ent_clinic/Pages/appointment/Appointment_Details.dart';
 import 'package:flutter/material.dart';
-import 'package:ent_clinic/Pages/Appointment_Details.dart';
 class AppointmentCard extends StatelessWidget {
   final String doctorName;
   final DateTime dateTime;

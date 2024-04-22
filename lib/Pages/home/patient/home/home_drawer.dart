@@ -1,7 +1,9 @@
+import 'package:ent_clinic/Pages/profile/profile.dart';
 import 'package:flutter/material.dart';
-import 'package:ent_clinic/Pages/SignIn.dart';
-import 'package:ent_clinic/Pages/profile.dart';
-import 'package:ent_clinic/Pages/Homepage/AboutUs.dart';
+
+
+import '../../../auth/signin.dart';
+import '../../about_us/about_us.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});

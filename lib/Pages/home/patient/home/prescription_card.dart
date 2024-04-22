@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ent_clinic/Pages/Prescription_Details.dart';
+
+import '../../../prescription/Prescription_Details.dart';
 
 class PrescriptionCard extends StatelessWidget {
   final String medicine;
@@ -26,7 +27,7 @@ class PrescriptionCard extends StatelessWidget {
           ),
         );
       },
-      child: Container(
+      child: SizedBox(
         width: double.infinity, // Set a constant width for the card
         child: Card(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
