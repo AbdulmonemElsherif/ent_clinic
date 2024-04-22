@@ -11,6 +11,6 @@ class AppRoutes {
 }
 
 Map<String, WidgetBuilder> routes = {
-  AppRoutes.signin: (context) => SignInPage(),
+  AppRoutes.signin: (context) => const SignInPage(),
   AppRoutes.home: (context) => const PatientHomePage(),
 };

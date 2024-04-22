@@ -111,22 +111,22 @@ class _SignInPageState extends State<SignInPage> {
       children: <Widget>[
         ElevatedButton(
           onPressed: _signIn,
-          child: const Text(
-            'Sign In',
-            style: TextStyle(color: Colors.white),
-          ),
           style: ButtonStyle(
             backgroundColor:
                 MaterialStateProperty.all(Theme.of(context).primaryColor),
             padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
           ),
+          child: const Text(
+            'Sign In',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         TextButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ResetPassword()),
+              MaterialPageRoute(builder: (context) => const ResetPassword()),
             );
           },
           child: Text(
