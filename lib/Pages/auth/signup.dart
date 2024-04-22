@@ -38,7 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
     // Add more specializations as needed
   ];
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +55,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 children: <Widget>[
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Padding(
@@ -74,7 +73,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   SizedBox(height: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Padding(
@@ -99,7 +97,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   SizedBox(height: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Padding(
@@ -129,7 +126,6 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-
   Widget _buildNameField() {
     return Column(
       children: <Widget>[

@@ -45,7 +45,7 @@ class _SignInPageState extends State<SignInPage> {
     return AspectRatio(
       aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
       child: Image.asset(
-        'assets/images/ent_clinic.jpg',
+        'assets/images/ent_clinic.png',
         fit: BoxFit.cover,
       ),
     );
