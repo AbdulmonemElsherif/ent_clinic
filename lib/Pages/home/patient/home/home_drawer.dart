@@ -3,7 +3,7 @@ import 'package:ent_clinic/Pages/appointment/create_appointment_page.dart';
 import 'package:ent_clinic/Pages/profile/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:adaptive_theme/adaptive_theme.dart';
 
 import '../../../auth/signin.dart';
 import '../../about_us/about_us.dart';
@@ -100,6 +100,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
             },
           ),
           const Divider(),
+          SwitchListTile(
+            title: const Text('Dark Mode'),
+            value: AdaptiveTheme.of(context).mode.isDark,
+            onChanged: (bool value) {
+              AdaptiveTheme.of(context).toggleThemeMode();
+            },
+          ),
           ListTile(
             title: const Text('Logout'),
             onTap: () {
