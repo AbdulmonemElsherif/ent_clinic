@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CreateAppointmentPage extends StatefulWidget {
@@ -13,17 +14,68 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
   TimeOfDay selectedTime = TimeOfDay.now();
   String? selectedReason;
 
-  final List<String> doctors = [
-    'Dr. John Doe',
-    'Dr. Jane Smith',
-    'Dr. Michael Brown',
-  ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<String> doctors = [];
+  List<String> reasons = ['General Checkup', 'Follow-up Appointment', 'Other Reason'];
 
-  final List<String> reasons = [
-    'General Checkup',
-    'Follow-up Appointment',
-    'Other Reason',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    fetchDoctors();
+  }
+
+  Future<void> fetchDoctors() async {
+      final QuerySnapshot snapshot = await _firestore.collection('users').where('userType', isEqualTo: 'doctor').get();
+      final List<String> fetchedDoctors = snapshot.docs.map((doc) => doc['name']).toList().cast<String>();
+      setState(() {
+        doctors = fetchedDoctors;
+      });
+  }
+  Future<void> createAppointment() async {
+    try {
+      await _firestore.collection('appointments').add({
+        'doctor': selectedDoctor,
+        'date': selectedDate,
+        'time': selectedTime.format(context),
+        'reason': selectedReason,
+      });
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Appointment created successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to create appointment: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +172,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
             ElevatedButton(
               onPressed: () {
                 if (selectedDoctor != null && selectedReason != null) {
-                  // Implement appointment creation logic
+                  createAppointment();
                 } else {
                   showDialog(
                     context: context,
