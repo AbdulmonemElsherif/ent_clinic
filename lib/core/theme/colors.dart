@@ -69,6 +69,7 @@ const darkColorScheme = ColorScheme(
 );
 
 final ThemeData lightThemeData = ThemeData(
+  fontFamily: 'Readex Pro',
   brightness: lightColorScheme.brightness,
   primaryColor: lightColorScheme.primary,
   primaryColorLight: lightColorScheme.primaryContainer,
@@ -76,24 +77,25 @@ final ThemeData lightThemeData = ThemeData(
   secondaryHeaderColor: lightColorScheme.secondary,
   hintColor: lightColorScheme.secondaryContainer,
   backgroundColor: lightColorScheme.background,
-  scaffoldBackgroundColor: lightColorScheme.surface, 
-  toggleableActiveColor: lightColorScheme.primary, 
+  scaffoldBackgroundColor: lightColorScheme.surface,
+  toggleableActiveColor: lightColorScheme.primary,
   textTheme: TextTheme(
-    // Define your light theme text styles
-  ), colorScheme: lightColorScheme.copyWith(secondary: lightColorScheme.primary),
+      // Define your light theme text styles
+      ),
+  colorScheme: lightColorScheme.copyWith(secondary: lightColorScheme.primary),
 );
 
 final ThemeData darkThemeData = ThemeData(
+  fontFamily: 'Readex Pro',
   brightness: darkColorScheme.brightness,
   primaryColor: darkColorScheme.primary,
   primaryColorLight: darkColorScheme.primaryContainer,
   primaryColorDark: darkColorScheme.primary,
   secondaryHeaderColor: darkColorScheme.secondary,
   hintColor: darkColorScheme.secondaryContainer,
-  backgroundColor: darkColorScheme.background,
-  scaffoldBackgroundColor: darkColorScheme.surface, 
-  toggleableActiveColor: darkColorScheme.primary, 
+  scaffoldBackgroundColor: darkColorScheme.surface,
   textTheme: TextTheme(
-    // Define your dark theme text styles
-  ), colorScheme: darkColorScheme.copyWith(secondary: darkColorScheme.primary),
+      // Define your dark theme text styles
+      ),
+  colorScheme: darkColorScheme.copyWith(secondary: darkColorScheme.primary),
 );
