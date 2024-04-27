@@ -14,6 +14,7 @@ dependencies:
   cloud_firestore: ^4.0.5
   datetime_picker_formfield: ^2.0.1
   adaptive_theme: ^3.6.0
+  ionicons: ^0.2.2
 
 
 
