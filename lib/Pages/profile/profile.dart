@@ -3,18 +3,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   Future<DocumentSnapshot> getUserProfile() async {
     var firebaseUser = FirebaseAuth.instance.currentUser;
-    return await FirebaseFirestore.instance.collection('users').doc(firebaseUser!.uid).get();
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseUser!.uid)
+        .get();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -29,37 +32,40 @@ class ProfilePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
+                      const Text(
                         'Patient Information',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       ListTile(
-                        title: Text('Name'),
+                        title: const Text('Name'),
                         subtitle: Text(snapshot.data!['name']),
                       ),
                       ListTile(
-                        title: Text('Patient ID'),
+                        title: const Text('Patient ID'),
                         subtitle: Text(snapshot.data!['patientID']),
                       ),
                       ListTile(
-                        title: Text('Date of Birth'),
+                        title: const Text('Date of Birth'),
                         subtitle: Text(snapshot.data!['dob']), // Use 'dob' key
                       ),
                       ListTile(
-                        title: Text('Gender'),
-                        subtitle: Text(snapshot.data!['gender']), // Use 'gender' key
+                        title: const Text('Gender'),
+                        subtitle:
+                            Text(snapshot.data!['gender']), // Use 'gender' key
                       ),
                       ListTile(
-                        title: Text('Email'),
-                        subtitle: Text(snapshot.data!['email']), // Use 'email' key
+                        title: const Text('Email'),
+                        subtitle:
+                            Text(snapshot.data!['email']), // Use 'email' key
                       ),
                       ListTile(
-                        title: Text('Phone'),
-                        subtitle: Text(snapshot.data!['phone']), // Use 'phone' key
+                        title: const Text('Phone'),
+                        subtitle:
+                            Text(snapshot.data!['phone']), // Use 'phone' key
                       ),
                       // Add more patient data as needed
                     ],
@@ -67,9 +73,9 @@ class ProfilePage extends StatelessWidget {
                 ),
               );
             } else if (snapshot.connectionState == ConnectionState.none) {
-              return Text("No data");
+              return const Text("No data");
             }
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           },
         ),
       ),

@@ -75,12 +75,59 @@ final ThemeData lightThemeData = ThemeData(
   primaryColorDark: lightColorScheme.primary,
   secondaryHeaderColor: lightColorScheme.secondary,
   hintColor: lightColorScheme.secondaryContainer,
-  backgroundColor: lightColorScheme.background,
-  scaffoldBackgroundColor: lightColorScheme.surface, 
-  toggleableActiveColor: lightColorScheme.primary, 
-  textTheme: TextTheme(
-    // Define your light theme text styles
-  ), colorScheme: lightColorScheme.copyWith(secondary: lightColorScheme.primary),
+  scaffoldBackgroundColor: lightColorScheme.surface,
+  textTheme: const TextTheme(
+      // Define your light theme text styles
+      ),
+  checkboxTheme: CheckboxThemeData(
+    fillColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return lightColorScheme.primary;
+      }
+      return null;
+    }),
+  ),
+  radioTheme: RadioThemeData(
+    fillColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return lightColorScheme.primary;
+      }
+      return null;
+    }),
+  ),
+  switchTheme: SwitchThemeData(
+    thumbColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return lightColorScheme.primary;
+      }
+      return null;
+    }),
+    trackColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return lightColorScheme.primary;
+      }
+      return null;
+    }),
+  ),
+  colorScheme: lightColorScheme
+      .copyWith(secondary: lightColorScheme.primary)
+      .copyWith(background: lightColorScheme.background),
 );
 
 final ThemeData darkThemeData = ThemeData(
@@ -90,10 +137,57 @@ final ThemeData darkThemeData = ThemeData(
   primaryColorDark: darkColorScheme.primary,
   secondaryHeaderColor: darkColorScheme.secondary,
   hintColor: darkColorScheme.secondaryContainer,
-  backgroundColor: darkColorScheme.background,
-  scaffoldBackgroundColor: darkColorScheme.surface, 
-  toggleableActiveColor: darkColorScheme.primary, 
-  textTheme: TextTheme(
-    // Define your dark theme text styles
-  ), colorScheme: darkColorScheme.copyWith(secondary: darkColorScheme.primary),
+  scaffoldBackgroundColor: darkColorScheme.surface,
+  textTheme: const TextTheme(
+      // Define your dark theme text styles
+      ),
+  checkboxTheme: CheckboxThemeData(
+    fillColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return darkColorScheme.primary;
+      }
+      return null;
+    }),
+  ),
+  radioTheme: RadioThemeData(
+    fillColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return darkColorScheme.primary;
+      }
+      return null;
+    }),
+  ),
+  switchTheme: SwitchThemeData(
+    thumbColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return darkColorScheme.primary;
+      }
+      return null;
+    }),
+    trackColor:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.disabled)) {
+        return null;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return darkColorScheme.primary;
+      }
+      return null;
+    }),
+  ),
+  colorScheme: darkColorScheme
+      .copyWith(secondary: darkColorScheme.primary)
+      .copyWith(background: darkColorScheme.background),
 );

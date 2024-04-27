@@ -28,21 +28,15 @@ class AppointmentCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Dr. Ruben Dorwart",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 5),
-              Text(
-                "Specialist",
-                style: Theme.of(context).textTheme.bodyLarge
-              ),
+              Text("Specialist", style: Theme.of(context).textTheme.bodyLarge),
               const SizedBox(height: 18),
               Container(
-                margin: EdgeInsets.only(bottom:15),
+                margin: const EdgeInsets.only(bottom: 15),
                 padding: const EdgeInsets.symmetric(
                   vertical: 6,
                   horizontal: 8.0,
@@ -72,8 +66,7 @@ class AppointmentCard extends StatelessWidget {
                     ),
                     Text(
                       "14:30 - 15:30 AM",
-                      style: TextStyle(
-                      ),
+                      style: TextStyle(),
                     )
                   ],
                 ),
@@ -81,14 +74,17 @@ class AppointmentCard extends StatelessWidget {
               Row(
                 children: [
                   SizedBox(
-                    height: 32,
-                      child: OutlinedButton(onPressed: (){}, child: const Text("Cancel"))),
-
-                  SizedBox(width: 10,),
-
-                  SizedBox(
                       height: 32,
-                      child: FilledButton(onPressed: (){}, child: const Text("Reschedule")),),
+                      child: OutlinedButton(
+                          onPressed: () {}, child: const Text("Cancel"))),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    height: 32,
+                    child: FilledButton(
+                        onPressed: () {}, child: const Text("Reschedule")),
+                  ),
                 ],
               )
             ],

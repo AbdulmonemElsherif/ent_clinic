@@ -1,4 +1,5 @@
 import 'package:ent_clinic/Pages/auth/signin.dart';
+import 'package:ent_clinic/Pages/doctor/doctor.dart';
 import 'package:ent_clinic/Pages/home/patient/home/patient_home.dart';
 import 'package:flutter/material.dart';
 import 'package:ent_clinic/Pages/Patient/patient_dashboard.dart';
@@ -12,10 +13,12 @@ class AppRoutes {
 
   // Home page route
   static const String home = '/home';
+  static const String doctor = '/doctor';
 }
 
 Map<String, WidgetBuilder> routes = {
   AppRoutes.signin: (context) => const SignInPage(),
   AppRoutes.home: (context) => const PatientHomePage(),
   AppRoutes.patient: (context) => const PatientDashboardPage(),
+  AppRoutes.doctor: (context) => Doctor(),
 };

@@ -15,6 +15,8 @@ dependencies:
   datetime_picker_formfield: ^2.0.1
   adaptive_theme: ^3.6.0
   ionicons: ^0.2.2
+  gap: ^3.0.1
+  font_awesome_flutter: ^10.7.0
 
 
 

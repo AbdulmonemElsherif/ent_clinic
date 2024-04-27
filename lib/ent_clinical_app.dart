@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
 class EntClinicalApp extends StatelessWidget {
-  const EntClinicalApp({Key? key}) : super(key: key);
+  const EntClinicalApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class EntClinicalApp extends StatelessWidget {
       initial: AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
         title: 'ENT Clinic',
-        initialRoute: AppRoutes.signin,
+        initialRoute: AppRoutes.doctor,
         theme: theme,
         darkTheme: darkTheme,
         routes: routes,
