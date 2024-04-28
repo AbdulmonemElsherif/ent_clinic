@@ -14,7 +14,7 @@ class EntClinicalApp extends StatelessWidget {
       initial: AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
         title: 'ENT Clinic',
-        initialRoute: AppRoutes.signin,
+        initialRoute: AppRoutes.doctor,
         theme: theme,
         darkTheme: darkTheme,
         routes: routes,

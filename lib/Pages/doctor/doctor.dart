@@ -4,9 +4,28 @@ import 'package:ent_clinic/core/GeneralWidgets/general.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class Doctor extends StatelessWidget {
-  // ignore: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
-  Doctor({Key? key});
+class Doctor extends StatefulWidget {
+  // ignore: prefer_const_constructors_in_immutables
+  Doctor({super.key});
+
+  @override
+  _DoctorState createState() => _DoctorState();
+}
+
+class _DoctorState extends State<Doctor> with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,85 +39,116 @@ class Doctor extends StatelessWidget {
       },
       {
         "name": "Hitler",
-        "date": "25/4/2024",
+        "date": "24/4/2024",
         "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
+        "time": "2:00 AM",
       },
       {
         "name": "Hitler",
-        "date": "25/4/2024",
+        "date": "24/4/2024",
         "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
+        "time": "2:00 AM",
       },
       {
         "name": "Hitler",
-        "date": "25/4/2024",
+        "date": "24/4/2024",
         "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
+        "time": "2:00 AM",
       },
       {
         "name": "Hitler",
-        "date": "25/4/2024",
+        "date": "24/4/2024",
         "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
+        "time": "2:00 AM",
       },
       {
         "name": "Hitler",
-        "date": "25/4/2024",
+        "date": "24/4/2024",
         "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
+        "time": "2:00 AM",
       },
       {
         "name": "Hitler",
-        "date": "25/4/2024",
+        "date": "24/4/2024",
         "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
+        "time": "2:00 AM",
       },
-      {
-        "name": "Hitler",
-        "date": "25/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
-      },
-      {
-        "name": "Hitler",
-        "date": "25/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
-      },
-      {
-        "name": "Hitler",
-        "date": "25/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "3:00 PM",
-      },
-      // Add more appointments as needed
     ];
 
     return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
+            const Gap(30),
             const DoctorInfoCard(),
-            const Gap(100),
+            const Gap(20),
+            // Container(
+            //   padding: const EdgeInsets.symmetric(vertical: 30),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(12),
+            //     color: const Color(0xFF212121),
+            //   ),
+            //   // Removed IconButton row
+            // ),
+            const Gap(10),
             Expanded(
-              child: Container(
-                // color: Color,
-                color: Colors.white10,
-                child: ListView.builder(
-                  itemCount: appointments.length,
-                  itemBuilder: (context, index) {
-                    // Extract appointment data for the current index
-                    Map<String, String> appointment = appointments[index];
+              child: Column(
+                children: [
+                  TabBar(
+                    controller: _tabController, // Provide the TabController
+                    // Add labels for each tab
+                    tabs: const [
+                      Tab(icon: Icon(Icons.calendar_month)),
+                      Tab(icon: Icon(Icons.history)),
+                      Tab(icon: Icon(Icons.local_hospital)),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      // Wrap content with TabBarView
+                      controller: _tabController,
+                      children: [
+                        ListView(
+                          physics: const ClampingScrollPhysics(),
+                          scrollDirection:
+                              Axis.horizontal, // Horizontal scrolling
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: appointments.length,
+                                itemBuilder: (context, index) {
+                                  // Extract appointment data for the current index
+                                  Map<String, String> appointment =
+                                      appointments[index];
 
-                    return AssignedAppointments(
-                      name: appointment["name"] ?? "",
-                      date: appointment["date"] ?? "",
-                      imagepath: appointment["imagepath"] ?? "",
-                      time: appointment["time"] ?? "",
-                    );
-                  },
-                ),
+                                  return Column(
+                                    children: [
+                                      const Gap(5),
+                                      AssignedAppointments(
+                                        name: appointment["name"] ?? "",
+                                        date: appointment["date"] ?? "",
+                                        imagepath:
+                                            appointment["imagepath"] ?? "",
+                                        time: appointment["time"] ?? "",
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        // ... other content for remaining tabs
+                        const Text(
+                            'Content for Tab 2'), // Placeholder for Tab 2 content
+                        const Text(
+                            'Content for Tab 3'), // Placeholder for Tab 3 content
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -114,9 +164,10 @@ class DoctorInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: const Color.fromARGB(255, 11, 79, 215),
       // shape: ,
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
         child: Row(
           children: [
             const CircleAvatar(
@@ -127,7 +178,7 @@ class DoctorInfoCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RegularText(text: "Dr. " "Hossam Yasser"),
+                RegularText(text: "Hello!\nDr. " "Hossam Yasser"),
                 RegularText(
                   text: "otolaryngologist ",
                   fontsize: 15,
@@ -155,8 +206,9 @@ class AssignedAppointments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: const Color.fromARGB(255, 11, 79, 215),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(13.0),
         child: Row(
           children: [
             Column(
@@ -181,7 +233,12 @@ class AssignedAppointments extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return const CHangePassswordDialog();
+                      return AppointmentFullinformation(
+                        name: name,
+                        date: date,
+                        imagepath: imagepath,
+                        time: time,
+                      );
                     },
                   );
                 },
@@ -225,8 +282,8 @@ class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      surfaceTintColor: Colors.black87,
-      backgroundColor: const Color.fromARGB(221, 0, 0, 0),
+      // surfaceTintColor: Colors.black87,
+      backgroundColor: const Color(0xFF000000),
       title: const Text('Change password'),
       contentPadding: const EdgeInsets.all(3),
       content: Column(
@@ -238,6 +295,7 @@ class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
             controller: oldPassword,
             isPassword: true,
             onChanged: (value) {},
+            // backgroundColor: Colors.black,
           ),
           const Gap(20),
           CustomTextBox(
@@ -266,6 +324,95 @@ class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
         TextButton(
           onPressed: () {},
           child: const Text('Update'),
+        ),
+      ],
+    );
+  }
+}
+
+class AppointmentFullinformation extends StatelessWidget {
+  const AppointmentFullinformation(
+      {super.key,
+      required this.name,
+      required this.date,
+      required this.imagepath,
+      required this.time});
+  final String name;
+  final String date;
+  final String time;
+  final String imagepath;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        const Gap(150),
+        Card(
+          color: const Color.fromARGB(255, 11, 79, 215),
+          child: Padding(
+            padding: const EdgeInsets.all(13.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const CircleAvatar(
+                      radius:
+                          22, // Adjust the radius according to your preference
+                      backgroundImage:
+                          AssetImage("assets/images/profilepic.jpg"),
+                    ),
+                    const Gap(20),
+                    RegularText(
+                      text: "Patient Name: $name",
+                      fontsize: 20,
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Gap(20),
+                        RegularText(text: date),
+                        RegularText(text: time),
+                      ],
+                    ),
+                    Container(
+                        padding: const EdgeInsets.all(10),
+                        width: (MediaQuery.of(context).size.width -
+                            MediaQuery.of(context).size.width / 2.5),
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RegularText(
+                              text: 'Complains',
+                              fontsize: 30,
+                            ),
+                            const Gap(20),
+                            const Text(
+                              'I\'ve been experiencing a sharp pain in my lower right abdomen for the past few days\n'
+                              'I\'ve noticed a persistent cough that hasn\'t improved with over-the-counter medication.\n'
+                              'I feel a general feeling of fatigue and weakness, along with a slight fever.\n',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  overflow: TextOverflow
+                                      .visible), // Adjust font size as needed
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );

@@ -23,25 +23,18 @@ class PrescriptionCard extends StatelessWidget {
               size: 45,
               color: Colors.black87,
             ),
-
           ),
           const SizedBox(width: 14),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Medicine A",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 5),
-              Text(
-                  "1 Pill Daily",
-                  style: Theme.of(context).textTheme.bodyLarge
-              ),
-
+              Text("1 Pill Daily",
+                  style: Theme.of(context).textTheme.bodyLarge),
             ],
           )
         ],
