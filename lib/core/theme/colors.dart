@@ -74,6 +74,7 @@ const darkColorScheme = ColorScheme(
 );
 
 final ThemeData lightThemeData = ThemeData(
+  fontFamily: 'Readex Pro',
   brightness: lightColorScheme.brightness,
   primaryColor: lightColorScheme.primary,
   primaryColorLight: lightColorScheme.primaryContainer,
@@ -136,6 +137,7 @@ final ThemeData lightThemeData = ThemeData(
 );
 
 final ThemeData darkThemeData = ThemeData(
+  fontFamily: 'Readex Pro',
   brightness: darkColorScheme.brightness,
   primaryColor: darkColorScheme.primary,
   primaryColorLight: darkColorScheme.primaryContainer,
@@ -196,3 +198,4 @@ final ThemeData darkThemeData = ThemeData(
       .copyWith(secondary: darkColorScheme.primary)
       .copyWith(background: darkColorScheme.background),
 );
+

@@ -17,8 +17,9 @@ dependencies:
   ionicons: ^0.2.2
   gap: ^3.0.1
   font_awesome_flutter: ^10.7.0
-
-
+  expansion_tile_card: ^3.0.0
+  fl_chart: ^0.67.0
+  d_chart: ^2.6.9
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +30,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+  
+  fonts:
+    # Readex Pro Font
+    - family: Readex Pro
+      fonts:
+        - asset: assets/fonts/ReadexPro.ttf
