@@ -35,34 +35,34 @@ class _HomeDrawerState extends State<HomeDrawer> {
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return DrawerHeader(
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.account_circle,
-                            size: 48, color: Colors.white),
-                        const SizedBox(width: 16),
-                        Text(
-                          snapshot
-                              .data!['name'], // Replace with actual user name
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                          ),
-                        ),
-                      ],
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
                     ),
-                  ),
-                );
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ProfilePage()),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.account_circle, size: 48, color: Colors.white),
+                          const SizedBox(width: 16),
+                          Expanded( // Wrap the Text widget with Expanded
+                            child: Text(
+                              snapshot.data!['name'], // Replace with actual user name
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
               } else if (snapshot.connectionState == ConnectionState.none) {
                 return const Text("No data");
               } else {
@@ -77,7 +77,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const CreateAppointmentPage()),
+                      builder: (context) => CreateAppointmentPage(patient: FirebaseAuth.instance.currentUser!.uid),
+                ),
               );
             },
           ),

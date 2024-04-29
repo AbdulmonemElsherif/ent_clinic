@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CreateAppointmentPage extends StatefulWidget {
-  const CreateAppointmentPage({super.key});
+  final String patient;
+  const CreateAppointmentPage({Key? key, required this.patient}) : super(key: key);
 
   @override
   _CreateAppointmentPageState createState() => _CreateAppointmentPageState();
@@ -38,6 +39,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
         'date': selectedDate,
         'time': selectedTime.format(context),
         'reason': selectedReason,
+        'patient': widget.patient, // Add the patient who booked the appointment
       });
       showDialog(
         context: context,
@@ -76,6 +78,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

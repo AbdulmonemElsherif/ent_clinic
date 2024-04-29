@@ -13,80 +13,97 @@ class AppointmentCard extends StatelessWidget {
         color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.4),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              'assets/images/doctor_2.png',
-              width: 45,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 14),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              const Text(
-                "Dr. Ruben Dorwart",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 5),
-              Text("Specialist", style: Theme.of(context).textTheme.bodyLarge),
-              const SizedBox(height: 18),
-              Container(
-                margin: const EdgeInsets.only(bottom: 15),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 6,
-                  horizontal: 8.0,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/images/doctor_2.png',
+                  width: 45,
+                  fit: BoxFit.cover,
                 ),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Row(
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Ionicons.calendar_outline,
-                      size: 18,
-                      color: Colors.black87,
+                    const Text(
+                      "Dr. Ruben Dorwart",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 6, right: 14),
-                      child: Text(
-                        "Today",
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Icon(
-                        Ionicons.time_outline,
-                        size: 18,
-                      ),
-                    ),
-                    Text(
-                      "14:30 - 15:30 AM",
-                      style: TextStyle(),
-                    )
+                    const SizedBox(height: 5),
+                    Text("Specialist", style: Theme.of(context).textTheme.bodyLarge),
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  SizedBox(
-                      height: 32,
-                      child: OutlinedButton(
-                          onPressed: () {}, child: const Text("Cancel"))),
-                  const SizedBox(
-                    width: 10,
+            ],
+          ),
+          const SizedBox(height: 18),
+          Container(
+            margin: const EdgeInsets.only(bottom: 15),
+            padding: const EdgeInsets.symmetric(
+              vertical: 6,
+              horizontal: 8.0,
+            ),
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(10)),
+            child: Row(
+              children: [
+                Icon(
+                  Ionicons.calendar_outline,
+                  size: 18,
+                  color: Colors.black87,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 6, right: 14),
+                  child: Text(
+                    "Today",
                   ),
-                  SizedBox(
-                    height: 32,
-                    child: FilledButton(
-                        onPressed: () {}, child: const Text("Reschedule")),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: Icon(
+                    Ionicons.time_outline,
+                    size: 18,
                   ),
-                ],
-              )
+                ),
+                Expanded( // Add this
+                  child: Text(
+                    "14:30 - 15:30 AM",
+                    style: TextStyle(),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              Expanded( // Add this
+                child: SizedBox(
+                  height: 32,
+                  child: OutlinedButton(
+                    onPressed: () {}, 
+                    child: const Text("Cancel")
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded( // Add this
+                child: SizedBox(
+                  height: 32,
+                  child: OutlinedButton(
+                    onPressed: () {}, 
+                    child: const Text("Reschedule")
+                  ),
+                ),
+              ),
             ],
           )
         ],

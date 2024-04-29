@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'home_drawer.dart';
 import 'appointment_card.dart';
 import 'prescription_card.dart'; // Import PrescriptionCard widget// Import CreatePrescriptionPage widget
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Appointment {
   final String doctorName;
@@ -123,7 +124,8 @@ class _PatientHomePageState extends State<PatientHomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const CreateAppointmentPage()),
+                   builder: (context) => CreateAppointmentPage(patient: FirebaseAuth.instance.currentUser!.uid),
+                ),
               );
             },
             backgroundColor: Colors.blue,

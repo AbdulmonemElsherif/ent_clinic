@@ -89,7 +89,7 @@ class _SignInPageState extends State<SignInPage> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const PatientHomePage(),
+                builder: (context) => const PatientDashboardPage(),
               ),
             );
             break;

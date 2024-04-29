@@ -154,10 +154,12 @@ class ProfilePage extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
+                          var firebaseUser = FirebaseAuth.instance.currentUser;
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EditMedicalInfoPage()),
+                              builder: (context) => EditMedicalInfoPage(documentId: firebaseUser!.uid),
+                            ),
                           );
                         },
                         child: const Text('Edit Medical Info'),

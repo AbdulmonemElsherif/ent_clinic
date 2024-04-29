@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-class EditMedicalInfoPage extends StatelessWidget {
+class EditMedicalInfoPage extends StatefulWidget {
+  final String documentId;
+
+  EditMedicalInfoPage({required this.documentId});
+
+  @override
+  _EditMedicalInfoPageState createState() => _EditMedicalInfoPageState();
+}
+
+class _EditMedicalInfoPageState extends State<EditMedicalInfoPage> {
   final _formKey = GlobalKey<FormState>();
+  String smokerValue = '';
+  String specialMedicalHospitalValue = '';
+  List<String> chronicDiseasesValue = [];
+  List<String> drugsValue = [];
+  String bloodTypeValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +33,14 @@ class EditMedicalInfoPage extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: 'Are you a smoker',enabledBorder: OutlineInputBorder(
-              borderRadius:
-              BorderRadius.all(Radius.circular(20.0)),
-              borderSide:
-              BorderSide(color: Colors.grey, width: 0.0),
-            ),
-                border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: 'Are you a smoker',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      borderSide: BorderSide(color: Colors.grey, width: 0.0),
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
                   items: <String>['Yes', 'No'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -37,85 +54,146 @@ class EditMedicalInfoPage extends StatelessWidget {
                     return null;
                   },
                   onChanged: (value) {
-                    // Handle change
+                    setState(() {
+                      smokerValue = value!;
+                    });
                   },
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Special Medical Hospital',                        enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    borderSide:
-                    BorderSide(color: Colors.grey, width: 0.0),
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: 'Special Medical Habit',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      borderSide: BorderSide(color: Colors.grey, width: 0.0),
+                    ),
+                    border: OutlineInputBorder(),
                   ),
-                      border: OutlineInputBorder()),
+                  items: <String>['Yoga', 'Meditation', 'Gluten-free diet', 'Vegan diet', 'Regular exercise'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
+                      return 'Please select an option';
                     }
                     return null;
                   },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Enter your chronic diseases',                        enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    borderSide:
-                    BorderSide(color: Colors.grey, width: 0.0),
-                  ),
-                      border: OutlineInputBorder()),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
+                  onChanged: (value) {
+                    setState(() {
+                      specialMedicalHospitalValue = value!;
+                    });
                   },
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Enter your drugs',                        enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    borderSide:
-                    BorderSide(color: Colors.grey, width: 0.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Chronic Diseases',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    MultiSelectDialogField(
+                      items: ['Diabetes', 'Hypertension', 'Arthritis', 'Asthma', 'Heart Disease', 'Cancer', 'Chronic Kidney Disease', 'Stroke', 'Chronic respiratory diseases', 'Hepatitis'].map((disease) => MultiSelectItem(disease, disease)).toList(),
+                      selectedColor: Colors.blue,
+                      onConfirm: (values) {
+                        setState(() {
+                          chronicDiseasesValue = values;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Drugs',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    MultiSelectDialogField(
+                      items: ['Aspirin', 'Metformin', 'Lisinopril', 'Ibuprofen', 'Paracetamol', 'Amoxicillin', 'Ciprofloxacin', 'Doxycycline', 'Furosemide', 'Gabapentin', 'Hydrochlorothiazide', 'Prednisone', 'Trazodone', 'Zolpidem', 'Sertraline', 'Simvastatin', 'Omeprazole', 'Losartan', 'Alprazolam', 'Atorvastatin', 'Tramadol', 'Hydrocodone/Acetaminophen', 'Amlodipine', 'Azithromycin', 'Fluoxetine', 'Lorazepam', 'Clonazepam', 'Lisinopril', 'Citalopram', 'Metoprolol', 'Pantoprazole', 'Meloxicam', 'Rosuvastatin', 'Clopidogrel', 'Escitalopram', 'Pravastatin', 'Bupropion', 'Carvedilol', 'Metformin', 'Atenolol', 'Gabapentin', 'Sertraline', 'Simvastatin', 'Levothyroxine', 'Losartan', 'Montelukast', 'Omeprazole', 'Pantoprazole', 'Rosuvastatin', 'Tramadol', 'Trazodone', 'Zolpidem'].map((drug) => MultiSelectItem(drug, drug)).toList(),
+                      selectedColor: Colors.blue,
+                      onConfirm: (values) {
+                        setState(() {
+                          drugsValue = values;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: 'Blood Type',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      borderSide: BorderSide(color: Colors.grey, width: 0.0),
+                    ),
+                    border: OutlineInputBorder(),
                   ),
-                      border: OutlineInputBorder()),
+                  items: <String>['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
+                      return 'Please select an option';
                     }
                     return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      bloodTypeValue = value!;
+                    });
                   },
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Enter your blood type',                        enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    borderSide:
-                    BorderSide(color: Colors.grey, width: 0.0),
-                  ),
-                      border: OutlineInputBorder()),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                // Add more fields as needed
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Save the changes and navigate back to the profile page
+                      // Reference to the document
+                      DocumentReference docRef = FirebaseFirestore.instance.collection('users').doc(widget.documentId);
+                
+                      // Check if the document exists
+                      docRef.get().then((doc) {
+                        if (doc.exists) {
+                          // If the document exists, update it
+                          docRef.update({
+                            'smoker': smokerValue,
+                            'specialMedicalHospital': specialMedicalHospitalValue,
+                            'chronicDiseases': chronicDiseasesValue,
+                            'drugs': drugsValue,
+                            'bloodType': bloodTypeValue,
+                          });
+                        } else {
+                          // If the document does not exist, create it
+                          docRef.set({
+                            'smoker': smokerValue,
+                            'specialMedicalHospital': specialMedicalHospitalValue,
+                            'chronicDiseases': chronicDiseasesValue,
+                            'drugs': drugsValue,
+                            'bloodType': bloodTypeValue,
+                          });
+                        }
+                      });
+                
+                      // Navigate back to the profile page
                       Navigator.pop(context);
                     }
                   },
