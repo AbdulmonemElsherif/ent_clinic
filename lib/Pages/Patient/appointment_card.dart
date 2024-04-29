@@ -1,11 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ent_clinic/Pages/appointment/create_appointment_page.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
 class AppointmentCard extends StatelessWidget {
-  const AppointmentCard({super.key});
+  final DocumentSnapshot appointment;
+
+  const AppointmentCard({Key? key, required this.appointment}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Timestamp timestamp = appointment['date'];
+    DateTime date = timestamp.toDate();
+    String formattedDate = DateFormat.yMMMMd().add_jm().format(date);
+
     return Container(
       width: double.maxFinite,
       padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 20),
@@ -31,12 +40,14 @@ class AppointmentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Dr. Ruben Dorwart",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Text(
+                      appointment['doctor'],
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 5),
-                    Text("Specialist", style: Theme.of(context).textTheme.bodyLarge),
+                    Text(
+                      appointment['reason'],
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                   ],
                 ),
               ),
@@ -54,28 +65,28 @@ class AppointmentCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10)),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Ionicons.calendar_outline,
                   size: 18,
                   color: Colors.black87,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 6, right: 14),
+                  padding: const EdgeInsets.only(left: 6, right: 14),
                   child: Text(
-                    "Today",
+                    formattedDate,
                   ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(right: 8),
                   child: Icon(
                     Ionicons.time_outline,
                     size: 18,
                   ),
                 ),
-                Expanded( // Add this
+                Expanded(
                   child: Text(
-                    "14:30 - 15:30 AM",
-                    style: TextStyle(),
+                    appointment['time'],
+                    style: const TextStyle(),
                   ),
                 )
               ],
@@ -83,26 +94,23 @@ class AppointmentCard extends StatelessWidget {
           ),
           Row(
             children: [
-              Expanded( // Add this
+              Expanded(
                 child: SizedBox(
                   height: 32,
                   child: OutlinedButton(
-                    onPressed: () {}, 
+                    onPressed: () async {
+                      // Delete the appointment from Firestore
+                      await FirebaseFirestore.instance
+                          .collection('appointments')
+                          .doc(appointment.id)
+                          .delete();
+                    }, 
                     child: const Text("Cancel")
                   ),
                 ),
               ),
               const SizedBox(
                 width: 10,
-              ),
-              Expanded( // Add this
-                child: SizedBox(
-                  height: 32,
-                  child: OutlinedButton(
-                    onPressed: () {}, 
-                    child: const Text("Reschedule")
-                  ),
-                ),
               ),
             ],
           )

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/Pages/Patient/appointment_card.dart';
 import 'package:ent_clinic/Pages/Patient/prescription_card.dart';
 import 'package:ent_clinic/Pages/Patient/history_appointment_card.dart';
@@ -48,16 +49,18 @@ class _PatientDashboardPageState extends State<PatientDashboardPage> {
                 });
               },
             ),
-            if (activeIndex == 0) ...[
-              const SizedBox(height: 25),
-              const AppointmentCard(),
-              const SizedBox(height: 10),
-              const AppointmentCard(),
-              const SizedBox(height: 10),
-              const AppointmentCard(),
-              const SizedBox(height: 10),
-              const AppointmentCard()
-            ],
+          if (activeIndex == 0) ...[
+            const SizedBox(height: 25),
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('appointments').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return const CircularProgressIndicator();
+                return Column(
+                  children: snapshot.data!.docs.map((doc) => AppointmentCard(appointment: doc)).toList(),
+                );
+              },
+            ),
+          ],
             if (activeIndex == 1) ...[
               const SizedBox(height: 25),
               const HistoryAppointmentCard(),
