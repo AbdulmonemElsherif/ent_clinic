@@ -14,9 +14,10 @@ class EditMedicalInfoPage extends StatefulWidget {
 class _EditMedicalInfoPageState extends State<EditMedicalInfoPage> {
   final _formKey = GlobalKey<FormState>();
   String smokerValue = '';
-  String specialMedicalHospitalValue = '';
+  String specialMedicalHabitsValue = '';
   List<String> chronicDiseasesValue = [];
   List<String> drugsValue = [];
+  List<String> allergiesValue = [];
   String bloodTypeValue = '';
 
   @override
@@ -85,7 +86,7 @@ class _EditMedicalInfoPageState extends State<EditMedicalInfoPage> {
                   },
                   onChanged: (value) {
                     setState(() {
-                      specialMedicalHospitalValue = value!;
+                      specialMedicalHabitsValue = value!;
                     });
                   },
                 ),
@@ -133,6 +134,28 @@ class _EditMedicalInfoPageState extends State<EditMedicalInfoPage> {
                 ),
                 const SizedBox(
                   height: 20,
+                ),Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Allergies',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      MultiSelectDialogField(
+                        items: ['Peanuts', 'Tree nuts', 'Milk', 'Egg', 'Wheat', 'Soy', 'Fish', 'Shellfish', 'Sesame', 'Mustard'].map((allergy) => MultiSelectItem(allergy, allergy)).toList(),
+                        selectedColor: Colors.blue,
+                        onConfirm: (values) {
+                          setState(() {
+                            allergiesValue = values;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),const SizedBox(
+                                    height: 20,
                 ),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
@@ -176,19 +199,21 @@ class _EditMedicalInfoPageState extends State<EditMedicalInfoPage> {
                           // If the document exists, update it
                           docRef.update({
                             'smoker': smokerValue,
-                            'specialMedicalHospital': specialMedicalHospitalValue,
+                            'specialMedicalHabits': specialMedicalHabitsValue,
                             'chronicDiseases': chronicDiseasesValue,
                             'drugs': drugsValue,
                             'bloodType': bloodTypeValue,
+                            'allergies': allergiesValue,
                           });
                         } else {
                           // If the document does not exist, create it
                           docRef.set({
                             'smoker': smokerValue,
-                            'specialMedicalHospital': specialMedicalHospitalValue,
+                            'specialMedicalHospital': specialMedicalHabitsValue,
                             'chronicDiseases': chronicDiseasesValue,
                             'drugs': drugsValue,
                             'bloodType': bloodTypeValue,
+                            'allergies': allergiesValue,
                           });
                         }
                       });

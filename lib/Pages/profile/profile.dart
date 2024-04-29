@@ -5,24 +5,27 @@ import 'package:ent_clinic/Pages/profile/edit_medical_info.dart';
 import 'package:ent_clinic/Pages/profile/edit_patient_info.dart';
 
 class ProfilePage extends StatelessWidget {
-  ProfilePage({super.key});
+  ProfilePage({Key? key}) : super(key: key);
 
-  Future<DocumentSnapshot> getUserProfile() async {
+  Future<DocumentSnapshot> getUserProfile(BuildContext context) async {
     var firebaseUser = FirebaseAuth.instance.currentUser;
-    return await FirebaseFirestore.instance
+    DocumentSnapshot userProfile = await FirebaseFirestore.instance
         .collection('users')
         .doc(firebaseUser!.uid)
         .get();
-  }
 
-  List<String> diseases = [
-    'Diabetes',
-    'Hypertension',
-    'Asthma',
-    'Arthritis',
-    'Heart Disease'
-  ];
-  List<String> drugs = ['Med1', 'Med2', 'Med3', 'Med4', 'Med5'];
+    if (!userProfile.exists) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditMedicalInfoPage(documentId: firebaseUser.uid),
+        ),
+      );
+      throw Exception('User profile does not exist');
+    }
+
+    return userProfile;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,141 +36,72 @@ class ProfilePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder(
-          future: getUserProfile(),
+          future: getUserProfile(context),
           builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return SingleChildScrollView(
-                  child: Column(
-                children: [
-                  Card(
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const Text(
-                            'Patient Information',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+              if (snapshot.hasData && snapshot.data != null) {
+                Map<String, dynamic>? data = snapshot.data!.data() as Map<String, dynamic>?;
+                if (data != null) {
+                  String? bloodType = data['bloodType'];
+                  List<dynamic>? chronicDiseases = data['chronicDiseases'];
+                  List<dynamic>? drugs = data['drugs'];
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Patient Information Card
+                        _buildCard(
+                          title: 'Patient Information',
+                          data: data,
+                          fields: ['name', 'dob', 'gender', 'email', 'phone'],
+                        ),
+                        // Medical Information Card
+                        _buildCard(
+                          title: 'Medical Information',
+                          data: data,
+                          fields: ['smoker', 'specialMedicalHabits', 'bloodType'],
+                          listFields: {
+                            'drugs': drugs,
+                            'chronicDiseases': chronicDiseases,
+                            'allergies': data['allergies'],
+                          },
+                        ),
+                        // Edit Buttons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditPatientInfoPage()),
+                                );
+                              },
+                              child: const Text('Edit Patient Info'),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          ListTile(
-                            title: const Text('Name'),
-                            subtitle: Text(snapshot.data!['name']),
-                          ),
-                          ListTile(
-                            title: const Text('Date of Birth'),
-                            subtitle:
-                                Text(snapshot.data!['dob']), // Use 'dob' key
-                          ),
-                          ListTile(
-                            title: const Text('Gender'),
-                            subtitle: Text(
-                                snapshot.data!['gender']), // Use 'gender' key
-                          ),
-                          ListTile(
-                            title: const Text('Email'),
-                            subtitle: Text(
-                                snapshot.data!['email']), // Use 'email' key
-                          ),
-                          ListTile(
-                            title: const Text('Phone'),
-                            subtitle: Text(
-                                snapshot.data!['phone']), // Use 'phone' key
-                          ),
-                          // Add more patient data as needed
-                        ],
-                      ),
+                            ElevatedButton(
+                              onPressed: () {
+                                var firebaseUser = FirebaseAuth.instance.currentUser;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditMedicalInfoPage(documentId: firebaseUser!.uid),
+                                  ),
+                                );
+                              },
+                              child: const Text('Edit Medical Info'),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                  ),
-                  Card(
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const Text(
-                            'Medical Information',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          const ListTile(
-                            title: Text('Smoker'),
-                            subtitle: Text("Yes"),
-                          ),
-                          const ListTile(
-                            title: Text('Special Medical Hospital'),
-                            subtitle: Text("...."),
-                          ),
-                          ListTile(
-                            title: const Text('Drugs'),
-                            subtitle: Container(
-                              height: 100, // Set the height as needed
-                              child: ListView.builder(
-                                itemCount: drugs.length,
-                                itemBuilder: (context, index) {
-                                  return Text(drugs[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('Chronic Diseases'),
-                            subtitle: Container(
-                              height: 100, // Set the height as needed
-                              child: ListView.builder(
-                                itemCount: diseases.length,
-                                itemBuilder: (context, index) {
-                                  return Text(diseases[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                          const ListTile(
-                            title: Text('Blood Type'),
-                            subtitle: Text("O+"), // Use 'email' key
-                          ),
-                          // Add more patient data as needed
-                        ],
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditPatientInfoPage()),
-                          );
-                        },
-                        child: const Text('Edit Patient Info'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          var firebaseUser = FirebaseAuth.instance.currentUser;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditMedicalInfoPage(documentId: firebaseUser!.uid),
-                            ),
-                          );
-                        },
-                        child: const Text('Edit Medical Info'),
-                      ),
-                    ],
-                  )
-                ],
-              ));
+                  );
+                } else {
+                  return const Text("No data");
+                }
+              } else {
+                return const Text("No data");
+              }
             } else if (snapshot.connectionState == ConnectionState.none) {
               return const Text("No data");
             }
@@ -175,6 +109,55 @@ class ProfilePage extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildCard({
+    required String title,
+    required Map<String, dynamic> data,
+    required List<String> fields,
+    Map<String, List<dynamic>?>? listFields,
+  }) {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ...fields.map((field) => ListTile(
+                  title: Text(field),
+                  subtitle: Text(data[field] ?? 'N/A'),
+                )),
+            if (listFields != null)
+              ...listFields.entries.map((entry) => ListTile(
+                    title: Text(entry.key),
+                    subtitle: _buildList(entry.value),
+                  )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildList(List<dynamic>? items) {
+    if (items == null || items.isEmpty) {
+      return const Text('N/A');
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return Text(items[index]);
+      },
     );
   }
 }
