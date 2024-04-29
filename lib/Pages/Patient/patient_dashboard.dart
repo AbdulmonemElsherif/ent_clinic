@@ -3,6 +3,7 @@ import 'package:ent_clinic/Pages/Patient/appointment_card.dart';
 import 'package:ent_clinic/Pages/Patient/prescription_card.dart';
 import 'package:ent_clinic/Pages/Patient/history_appointment_card.dart';
 import 'package:ent_clinic/Pages/home/patient/home/home_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -52,11 +53,20 @@ class _PatientDashboardPageState extends State<PatientDashboardPage> {
           if (activeIndex == 0) ...[
             const SizedBox(height: 25),
             StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('appointments').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('appointments')
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return const CircularProgressIndicator();
                 return Column(
-                  children: snapshot.data!.docs.map((doc) => AppointmentCard(appointment: doc)).toList(),
+                  children: snapshot.data!.docs.map((DocumentSnapshot doc) {
+                    // Check if the appointment belongs to the current patient
+                    if (doc.id == FirebaseAuth.instance.currentUser!.uid) {
+                      return AppointmentCard(appointment: doc);
+                    } else {
+                      return Container();  // Return an empty container for other patients' appointments
+                    }
+                  }).toList(),
                 );
               },
             ),
