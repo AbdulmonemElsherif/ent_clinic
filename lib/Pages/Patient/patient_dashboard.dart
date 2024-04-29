@@ -1,5 +1,6 @@
 import 'package:ent_clinic/Pages/Patient/appointment_card.dart';
 import 'package:ent_clinic/Pages/Patient/prescription_card.dart';
+import 'package:ent_clinic/Pages/Patient/history_appointment_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -56,6 +57,16 @@ class _PatientDashboardPageState extends State<PatientDashboardPage> {
                 const AppointmentCard(),
                 const SizedBox(height:10),
                 const AppointmentCard()
+          ],
+          if (activeIndex == 1) ...[
+            const SizedBox(height: 25),
+            const HistoryAppointmentCard(),
+            const SizedBox(height:10),
+            const HistoryAppointmentCard(),
+            const SizedBox(height:10),
+            const HistoryAppointmentCard(),
+            const SizedBox(height:10),
+            const HistoryAppointmentCard()
           ],
           if (activeIndex == 2) ...[
             const SizedBox(height: 25),
