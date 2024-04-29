@@ -1,3 +1,4 @@
+import 'package:ent_clinic/Pages/Patient/patient_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,8 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import '../home/patient/home/patient_home.dart';
 import 'signin.dart';
 
-enum UserType { patient, doctor }
+enum UserType { patient, doctor, admin }
+
 enum Gender { male, female }
 
 class SignUpPage extends StatefulWidget {
@@ -23,12 +25,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _dobController = TextEditingController();
-  final _genderController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _specializationController = TextEditingController();
+
   UserType _userType = UserType.patient;
   Gender _gender = Gender.male;
-  String _specialization = 'Audiology'; // Default value
 
   List<String> specializations = [
     'Audiology',
@@ -62,61 +62,23 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: Column(
                         children: <Widget>[
                           _buildNameField(),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           _buildEmailField(),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           _buildPasswordField(),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: _buildGenderField(),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           _buildDOBField(),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 20),
                           _buildPhoneField(),
+                          const SizedBox(height: 5),
+                          _buildGenderField(),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: _buildUserTypeRadioButtons(),
-                          ),
-                          if (_userType == UserType.doctor)
-                            Expanded(
-                              child: _buildSpecializationField(),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildSignUpButton(),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   _buildSignInButton(),
                 ],
               ),
@@ -126,6 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+
   Widget _buildNameField() {
     return Column(
       children: <Widget>[
@@ -186,65 +149,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildUserTypeRadioButtons() {
-    return Column(
-      children: <Widget>[
-        ListTile(
-          title: const Text('Patient'),
-          leading: Radio<UserType>(
-            value: UserType.patient,
-            groupValue: _userType,
-            onChanged: (UserType? value) {
-              setState(() {
-                _userType = value!;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: const Text('Doctor'),
-          leading: Radio<UserType>(
-            value: UserType.doctor,
-            groupValue: _userType,
-            onChanged: (UserType? value) {
-              setState(() {
-                _userType = value!;
-              });
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
- Widget _buildSpecializationField() {
-    return DropdownButtonFormField<String>(
-      value: _specialization,
-      decoration: const InputDecoration(
-        labelText: 'Specialization',
-        border: OutlineInputBorder(),
-      ),
-      items: specializations.map((String specialization) {
-        return DropdownMenuItem<String>(
-          value: specialization,
-          child: Text(specialization),
-        );
-      }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          _specialization = newValue!;
-        });
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please select your specialization';
-        }
-        return null;
-      },
-    );
-  }
-
- Widget _buildDOBField() {
+  Widget _buildDOBField() {
     return DateTimeField(
       controller: _dobController,
       format: DateFormat("yyyy-MM-dd"),
@@ -273,30 +178,37 @@ class _SignUpPageState extends State<SignUpPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        Radio<Gender>(
-          value: Gender.male,
-          groupValue: _gender,
-          onChanged: (Gender? value) {
-            setState(() {
-              _gender = value!;
-            });
-          },
+        Row(
+          children: [
+            Radio<Gender>(
+              value: Gender.male,
+              groupValue: _gender,
+              onChanged: (Gender? value) {
+                setState(() {
+                  _gender = value!;
+                });
+              },
+            ),
+            const Text('Male'),
+          ],
         ),
-        Text('Male'),
-        Radio<Gender>(
-          value: Gender.female,
-          groupValue: _gender,
-          onChanged: (Gender? value) {
-            setState(() {
-              _gender = value!;
-            });
-          },
+        Row(
+          children: [
+            Radio<Gender>(
+              value: Gender.female,
+              groupValue: _gender,
+              onChanged: (Gender? value) {
+                setState(() {
+                  _gender = value!;
+                });
+              },
+            ),
+            const Text('Female'),
+          ],
         ),
-        Text('Female'),
       ],
     );
   }
-  
 
   Widget _buildPhoneField() {
     return TextFormField(
@@ -338,7 +250,7 @@ class _SignUpPageState extends State<SignUpPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SignInPage()),
+              MaterialPageRoute(builder: (context) => const SignInPage()),
             );
           },
           child: Text(
@@ -350,70 +262,49 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-Future<String> generatePatientID() async {
-  // Get a reference to the counter document
-  DocumentReference counterDoc = FirebaseFirestore.instance.collection('counters').doc('patientID');
-  // Run a transaction to increment the counter
-  return FirebaseFirestore.instance.runTransaction((transaction) async {
-    DocumentSnapshot snapshot = await transaction.get(counterDoc);
-    if (!snapshot.exists) {
-      // If the document doesn't exist, create it and set the counter to 1
-      transaction.set(counterDoc, {'counter': 1});
-      return '1';
-    } else {
-      // If the document exists, increment the counter and return it
-      int newCounter = snapshot.get('counter') + 1;
-      transaction.update(counterDoc, {'counter': newCounter});
-      return newCounter.toString();
-    }
-  });
-}
+  Future<void> _registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
 
-Future<void> _registerUser() async {
-  if (_formKey.currentState!.validate()) {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      // Generate a simpler, unique patient ID
-      String patientID = await generatePatientID(); // Note the 'await' keyword here
-      // Save additional info to Firestore
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .set({
-        'name': _nameController.text,
-        'email': _emailController.text,
-        'dob': _dobController.text,
-        'gender': _gender == Gender.male ? 'male' : 'female', 
-        'phone': _phoneController.text,
-        'patientID': patientID, // Use the generated patient ID
-        'userType': _userType == UserType.patient ? 'patient' : 'doctor',
-        'specialization': _userType == UserType.doctor
-            ? _specializationController.text
-            : null,
-      });
-      // Navigate to the next page if the registration was successful
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const PatientHomePage()),
-      );
-    } on FirebaseAuthException catch (e) {
-      String message;
-      if (e.code == 'email-already-in-use') {
-        message = 'The account already exists for that email.';
-      } else {
-        message = 'Something went wrong. Please try again later.';
+        // Save additional info to Firestore
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+          'name': _nameController.text,
+          'email': _emailController.text,
+          'dob': _dobController.text,
+          'gender': _gender == Gender.male ? 'male' : 'female',
+          'phone': _phoneController.text,
+        });
+
+        // Navigate to the next page if the registration was successful
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PatientDashboardPage(),
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        String message;
+        if (e.code == 'email-already-in-use') {
+          message = 'The account already exists for that email.';
+        } else {
+          message = 'Something went wrong. Please try again later.';
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            duration: const Duration(seconds: 2),
+          ),
+        );
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          duration: const Duration(seconds: 2),
-        ),
-      );
     }
   }
-}
 }

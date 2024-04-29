@@ -15,6 +15,7 @@ class HistoryAppointmentCard extends StatelessWidget {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
@@ -24,7 +25,6 @@ class HistoryAppointmentCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(width: 14),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -71,13 +71,15 @@ class HistoryAppointmentCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Text("Diagnosis: ",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
-              const Text("Prescription: ",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)
-
+              const Text(
+                "Diagnosis: ",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                "Prescription: ",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              )
             ],
-
           )
         ],
       ),

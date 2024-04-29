@@ -18,7 +18,10 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   Future<DocumentSnapshot> getUserData() async {
     var firebaseUser = FirebaseAuth.instance.currentUser;
-    return await FirebaseFirestore.instance.collection('users').doc(firebaseUser!.uid).get();
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseUser!.uid)
+        .get();
   }
 
   @override
@@ -45,10 +48,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     },
                     child: Row(
                       children: [
-                        const Icon(Icons.account_circle, size: 48, color: Colors.white),
+                        const Icon(Icons.account_circle,
+                            size: 48, color: Colors.white),
                         const SizedBox(width: 16),
                         Text(
-                          snapshot.data!['name'], // Replace with actual user name
+                          snapshot
+                              .data!['name'], // Replace with actual user name
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -60,8 +65,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 );
               } else if (snapshot.connectionState == ConnectionState.none) {
                 return const Text("No data");
+              } else {
+                return const SizedBox.shrink();
               }
-              return const CircularProgressIndicator();
             },
           ),
           ListTile(
@@ -70,16 +76,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CreateAppointmentPage()),
+                MaterialPageRoute(
+                    builder: (context) => const CreateAppointmentPage()),
               );
-
             },
           ),
           ListTile(
             title: const Text('Services'),
             onTap: () {
               Navigator.pop(context);
-              // TODO: Implement services page
             },
           ),
           ListTile(

@@ -1,8 +1,15 @@
+import 'package:ent_clinic/Pages/Patient/patient_dashboard.dart';
+import 'package:ent_clinic/Pages/auth/widgets/email_field.dart';
+import 'package:ent_clinic/Pages/auth/widgets/password_field.dart';
+import 'package:ent_clinic/Pages/auth/widgets/signin_button.dart';
+import 'package:ent_clinic/Pages/auth/widgets/signup_button.dart';
+import 'package:ent_clinic/Pages/auth/widgets/welcome_text.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../home/patient/home/patient_home.dart';
 import 'reset_password.dart';
 import 'signup.dart';
+import 'widgets/logo.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -28,12 +35,18 @@ class _SignInPageState extends State<SignInPage> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              _buildLogo(),
-              _buildWelcomeText(),
-              _buildEmailField(),
-              _buildPasswordField(),
-              _buildSignInButton(),
-              _buildSignUpButton(),
+              const Logo(),
+              const WelcomeText(),
+              EmailField(
+                controller: _emailController,
+              ),
+              PasswordField(
+                controller: _passwordController,
+              ),
+              SigninButton(
+                onPressed: _signIn,
+              ),
+              const SignupButton(),
             ],
           ),
         ),
@@ -41,117 +54,6 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget _buildLogo() {
-    return AspectRatio(
-      aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
-      child: Image.asset(
-        'assets/images/ent_clinic.png',
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-
-  Widget _buildWelcomeText() {
-    return const Column(
-      children: <Widget>[
-        SizedBox(height: 16.0),
-        Text(
-          'Welcome back!',
-          style: TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 16.0),
-      ],
-    );
-  }
-
-  Widget _buildEmailField() {
-    return TextFormField(
-      controller: _emailController,
-      decoration: const InputDecoration(
-        labelText: 'Email',
-        border: OutlineInputBorder(),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your email';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return Column(
-      children: <Widget>[
-        const SizedBox(height: 16.0),
-        TextFormField(
-          controller: _passwordController,
-          decoration: const InputDecoration(
-            labelText: 'Password',
-            border: OutlineInputBorder(),
-          ),
-          obscureText: true,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your password';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 16.0),
-      ],
-    );
-  }
-
-  Widget _buildSignInButton() {
-    return Column(
-      children: <Widget>[
-        ElevatedButton(
-          onPressed: _signIn,
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all(Theme.of(context).primaryColor),
-            padding: MaterialStateProperty.all(
-                const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0)),
-          ),
-          child: const Text(
-            'Sign In',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ResetPassword()),
-            );
-          },
-          child: Text(
-            'Forgot password?',
-            style: TextStyle(color: Theme.of(context).primaryColor),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSignUpButton() {
-    return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SignUpPage()),
-        );
-      },
-      child: Text(
-        'New user? Sign Up',
-        style: TextStyle(color: Theme.of(context).primaryColor),
-      ),
-    );
-  }
 
   Future<void> _signIn() async {
     if (_formKey.currentState!.validate()) {
@@ -161,9 +63,10 @@ class _SignInPageState extends State<SignInPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
+        
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const PatientHomePage()),
+          MaterialPageRoute(builder: (context) => const PatientDashboardPage()),
         );
       } on FirebaseAuthException catch (e) {
         String message;
@@ -174,6 +77,7 @@ class _SignInPageState extends State<SignInPage> {
         } else {
           message = 'Something went wrong. Please try again later.';
         }
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(message),
