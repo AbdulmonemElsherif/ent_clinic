@@ -9,7 +9,7 @@ import '../../../auth/signin.dart';
 import '../../about_us/about_us.dart';
 
 class HomeDrawer extends StatefulWidget {
-  const HomeDrawer({Key? key}) : super(key: key);
+  const HomeDrawer({super.key});
 
   @override
   _HomeDrawerState createState() => _HomeDrawerState();

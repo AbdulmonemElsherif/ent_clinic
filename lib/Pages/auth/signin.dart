@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/Pages/Patient/patient_dashboard.dart';
+import 'package:ent_clinic/Pages/admin/admin_main.dart';
 import 'package:ent_clinic/Pages/auth/widgets/email_field.dart';
 import 'package:ent_clinic/Pages/auth/widgets/password_field.dart';
 import 'package:ent_clinic/Pages/auth/widgets/signin_button.dart';
 import 'package:ent_clinic/Pages/auth/widgets/signup_button.dart';
 import 'package:ent_clinic/Pages/auth/widgets/welcome_text.dart';
+import 'package:ent_clinic/Pages/doctor/doctor.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../home/patient/home/patient_home.dart';
@@ -54,6 +57,13 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
+  Future<DocumentSnapshot> getUserData() async {
+    var firebaseUser = FirebaseAuth.instance.currentUser;
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseUser!.uid)
+        .get();
+  }
 
   Future<void> _signIn() async {
     if (_formKey.currentState!.validate()) {
@@ -63,11 +73,42 @@ class _SignInPageState extends State<SignInPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-        
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const PatientDashboardPage()),
-        );
+
+        DocumentSnapshot snapshot = await getUserData();
+
+        switch (snapshot['role']) {
+          case 'doctor':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DoctorPage(),
+              ),
+            );
+            break;
+          case 'patient':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PatientHomePage(),
+              ),
+            );
+            break;
+          case 'admin':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AdminMainPage(),
+              ),
+            );
+
+          default:
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PatientHomePage(),
+              ),
+            );
+        }
       } on FirebaseAuthException catch (e) {
         String message;
         if (e.code == 'user-not-found') {
@@ -77,7 +118,7 @@ class _SignInPageState extends State<SignInPage> {
         } else {
           message = 'Something went wrong. Please try again later.';
         }
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(message),

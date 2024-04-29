@@ -4,15 +4,15 @@ import 'package:ent_clinic/core/GeneralWidgets/general.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class Doctor extends StatefulWidget {
+class DoctorPage extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
-  Doctor({super.key});
+  DoctorPage({super.key});
 
   @override
-  _DoctorState createState() => _DoctorState();
+  _DoctorPageState createState() => _DoctorPageState();
 }
 
-class _DoctorState extends State<Doctor> with SingleTickerProviderStateMixin {
+class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
