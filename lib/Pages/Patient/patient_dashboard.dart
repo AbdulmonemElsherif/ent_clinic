@@ -62,10 +62,10 @@ class _PatientDashboardPageState extends State<PatientDashboardPage> {
                 return Column(
                   children: snapshot.data!.docs.map((DocumentSnapshot doc) {
                     // Check if the appointment belongs to the current patient
-                    if (doc.id == FirebaseAuth.instance.currentUser!.uid) {
+                    if (doc['patient'] == FirebaseAuth.instance.currentUser!.uid) {
                       return AppointmentCard(appointment: doc);
                     } else {
-                      return Container(); // Return an empty container for other patients' appointments
+                      return Container();  // Return an empty container for other patients' appointments
                     }
                   }).toList(),
                 );

@@ -80,7 +80,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
   Future<void> fetchDoctors() async {
     final QuerySnapshot snapshot = await _firestore
         .collection('users')
-        .where('userType', isEqualTo: 'doctor')
+        .where('role', isEqualTo: 'doctor')
         .get();
     final List<String> fetchedDoctors =
         snapshot.docs.map((doc) => doc['name']).toList().cast<String>();
@@ -110,6 +110,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
         'time': selectedTime.format(context),
         'reason': selectedReason,
         'patient': widget.patient,
+        'complaint': selectedComplaint,
       });
       showDialog(
         context: context,
