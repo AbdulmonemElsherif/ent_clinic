@@ -9,7 +9,6 @@ import 'package:ent_clinic/Pages/auth/widgets/welcome_text.dart';
 import 'package:ent_clinic/Pages/doctor/doctor.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../home/patient/home/patient_home.dart';
 import 'reset_password.dart';
 import 'signup.dart';
 import 'widgets/logo.dart';
@@ -105,7 +104,7 @@ class _SignInPageState extends State<SignInPage> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const PatientHomePage(),
+                builder: (context) => const PatientDashboardPage(),
               ),
             );
         }

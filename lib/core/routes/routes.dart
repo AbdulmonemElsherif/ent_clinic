@@ -4,7 +4,6 @@ import 'package:ent_clinic/Pages/admin/admin_home_page.dart';
 import 'package:ent_clinic/Pages/admin/admin_statistics_page.dart';
 import 'package:ent_clinic/Pages/auth/signin.dart';
 import 'package:ent_clinic/Pages/doctor/doctor.dart';
-import 'package:ent_clinic/Pages/home/patient/home/patient_home.dart';
 import 'package:ent_clinic/Pages/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ent_clinic/Pages/Patient/patient_dashboard.dart';
@@ -28,7 +27,7 @@ class AppRoutes {
 
 Map<String, WidgetBuilder> routes = {
   AppRoutes.signin: (context) => const SignInPage(),
-  AppRoutes.home: (context) => const PatientHomePage(),
+  AppRoutes.home: (context) => const PatientDashboardPage(),
   // Admin pages
   AppRoutes.adminMain: (context) => AdminMainPage(),
   AppRoutes.adminHome: (context) => AdminHomePage(),

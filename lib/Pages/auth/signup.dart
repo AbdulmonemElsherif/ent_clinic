@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-import '../home/patient/home/patient_home.dart';
 import 'signin.dart';
 
 enum UserType { patient, doctor, admin }

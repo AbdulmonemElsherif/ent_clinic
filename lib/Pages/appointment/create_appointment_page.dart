@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CreateAppointmentPage extends StatefulWidget {
   final String patient;
-  const CreateAppointmentPage({Key? key, required this.patient}) : super(key: key);
+  const CreateAppointmentPage({super.key, required this.patient});
 
   @override
   _CreateAppointmentPageState createState() => _CreateAppointmentPageState();
@@ -14,24 +14,94 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   String? selectedReason;
+  String? selectedIcon;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String? selectedComplaint;
+
   List<String> doctors = [];
-  List<String> reasons = ['General Checkup', 'Follow-up Appointment', 'Other Reason'];
+  List<String> reasons = [
+    'General Checkup',
+    'Follow-up Appointment',
+    'Other Reason'
+  ];
+  List<String> earComplaints = [
+    'Earache',
+    'Hearing Loss',
+    'Ear Infection',
+    'Tinnitus',
+    'Vertigo',
+    'Earwax Blockage',
+    'Ear Discharge',
+    'Cholesteatoma',
+    'Meniere\'s Disease',
+    'Acoustic Neuroma',
+    'Ear Drum Perforation',
+    'Foreign Body in Ear'
+  ];
+  List<String> noseComplaints = [
+    'Headache and facial pain',
+    'Nose Bleed',
+    'Loss of Smell',
+    'Nasal Congestion',
+    'Runny Nose',
+    'Sneezing',
+    'Loss of Smell',
+    'Noisy breathing sound',
+    'Nasal Obstruction',
+    'Nasal Septum Deviation',
+    'Nasal Turbinate Hypertrophy',
+    'Nasal Vestibulitis'
+  ];
+
+  List<String> throatComplaints = [
+    'Sore Throat',
+    'Swallowing Difficulty',
+    'Throat Pain',
+    'Bloody cough',
+    'Throat Inflammation',
+    'Neck Swelling',
+    'Throat Dryness',
+    'Throat Itching/Burning',
+    'Throat Lump',
+    'Snoring and difficult breathing during sleeping',
+    'Throat Discomfort',
+  ];
+
+  List<String> currentComplaints = [];
 
   @override
   void initState() {
     super.initState();
     fetchDoctors();
+    selectedComplaint = null;
   }
 
   Future<void> fetchDoctors() async {
-      final QuerySnapshot snapshot = await _firestore.collection('users').where('userType', isEqualTo: 'doctor').get();
-      final List<String> fetchedDoctors = snapshot.docs.map((doc) => doc['name']).toList().cast<String>();
-      setState(() {
-        doctors = fetchedDoctors;
-      });
+    final QuerySnapshot snapshot = await _firestore
+        .collection('users')
+        .where('userType', isEqualTo: 'doctor')
+        .get();
+    final List<String> fetchedDoctors =
+        snapshot.docs.map((doc) => doc['name']).toList().cast<String>();
+    setState(() {
+      doctors = fetchedDoctors;
+    });
   }
+
+  void setComplaints(List<String> complaints) {
+    setState(() {
+      currentComplaints = List.from(complaints); // Update currentComplaints
+    });
+  }
+
+  void selectIcon(String icon) {
+    setState(() {
+      selectedIcon = icon;
+      selectedComplaint = null; // Reset selectedComplaint when the icon changes
+    });
+  }
+
   Future<void> createAppointment() async {
     try {
       await _firestore.collection('appointments').add({
@@ -39,7 +109,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
         'date': selectedDate,
         'time': selectedTime.format(context),
         'reason': selectedReason,
-        'patient': widget.patient, // Add the patient who booked the appointment
+        'patient': widget.patient,
       });
       showDialog(
         context: context,
@@ -78,7 +148,6 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -171,6 +240,140 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
                 );
               }).toList(),
             ),
+            const SizedBox(height: 20),
+            const Text('Select Complaint:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: selectedIcon == 'ear'
+                          ? const Color.fromARGB(255, 0, 26, 255)
+                              .withOpacity(0.5)
+                          : const Color.fromARGB(0, 0, 0, 0),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/ear.png',
+                        width: 40,
+                        height: 40,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    setComplaints(earComplaints);
+                    selectIcon('ear');
+                    selectedIcon = 'ear';
+                  },
+                ),
+                IconButton(
+                  icon: Container(
+                    width: 60, // Adjust the width to your desired size
+                    height: 60, // Adjust the height to your desired size
+                    decoration: BoxDecoration(
+                      color: selectedIcon == 'nose'
+                          ? const Color.fromARGB(255, 0, 26, 255)
+                              .withOpacity(0.5)
+                          : const Color.fromARGB(0, 0, 0, 0),
+                      borderRadius: BorderRadius.circular(
+                          30), // Optional: Add border radius for rounded corners
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/nose.png',
+                        width: 40, // Adjust the image size as needed
+                        height: 40,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    setComplaints(noseComplaints);
+                    selectIcon('nose');
+                    selectedIcon = 'nose';
+                  },
+                ),
+                IconButton(
+                  icon: Container(
+                    width: 60, // Adjust the width to your desired size
+                    height: 60, // Adjust the height to your desired size
+                    decoration: BoxDecoration(
+                      color: selectedIcon == 'throat'
+                          ? const Color.fromARGB(255, 0, 26, 255)
+                              .withOpacity(0.5)
+                          : const Color.fromARGB(0, 0, 0, 0),
+                      borderRadius: BorderRadius.circular(
+                          30), // Optional: Add border radius for rounded corners
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/throat.png',
+                        width: 40, // Adjust the image size as needed
+                        height: 40,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    setComplaints(throatComplaints);
+                    selectIcon('throat');
+                    selectedIcon = 'throat';
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            if (currentComplaints.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Select Complaint:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  DropdownButton<String>(
+                    value: selectedComplaint,
+                    onChanged: (newValue) {
+                      setState(() {
+                        if (selectedIcon == 'ear' &&
+                            earComplaints.contains(newValue)) {
+                          selectedComplaint = newValue!;
+                        } else if (selectedIcon == 'nose' &&
+                            noseComplaints.contains(newValue)) {
+                          selectedComplaint = newValue!;
+                        } else if (selectedIcon == 'throat' &&
+                            throatComplaints.contains(newValue)) {
+                          selectedComplaint = newValue!;
+                        }
+                      });
+                    },
+                    items: selectedIcon == 'ear'
+                        ? earComplaints.map((complaint) {
+                            return DropdownMenuItem<String>(
+                              value: complaint,
+                              child: Text(complaint),
+                            );
+                          }).toList()
+                        : selectedIcon == 'nose'
+                            ? noseComplaints.map((complaint) {
+                                return DropdownMenuItem<String>(
+                                  value: complaint,
+                                  child: Text(complaint),
+                                );
+                              }).toList()
+                            : throatComplaints.map((complaint) {
+                                return DropdownMenuItem<String>(
+                                  value: complaint,
+                                  child: Text(complaint),
+                                );
+                              }).toList(),
+                    isExpanded: true, // Expand the dropdown menu horizontally
+                  ),
+                ],
+              ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {

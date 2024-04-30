@@ -1,4 +1,3 @@
-import 'package:ent_clinic/Pages/home/patient/home/appointment_card.dart';
 import 'package:ent_clinic/core/GeneralWidgets/CustomTextBox.dart';
 import 'package:ent_clinic/core/GeneralWidgets/general.dart';
 import 'package:flutter/material.dart';
