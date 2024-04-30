@@ -14,8 +14,9 @@ class AppointmentCard extends StatelessWidget {
     Timestamp timestamp = appointment['date'];
     DateTime date = timestamp.toDate();
     String formattedDate = DateFormat.yMMMMd().add_jm().format(date);
-
-    return Container(
+return Padding(
+      padding: const EdgeInsets.only(bottom: 16), // Adjust the spacing as needed
+      child: Container(
       width: double.maxFinite,
       padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 20),
       decoration: BoxDecoration(
@@ -116,6 +117,7 @@ class AppointmentCard extends StatelessWidget {
           )
         ],
       ),
+    ),
     );
   }
 }
