@@ -331,10 +331,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Select Complaint:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  
                   DropdownButton<String>(
                     value: selectedComplaint,
                     onChanged: (newValue) {

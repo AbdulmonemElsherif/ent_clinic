@@ -163,7 +163,6 @@ class DoctorInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color.fromARGB(255, 11, 79, 215),
       // shape: ,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
@@ -205,7 +204,6 @@ class AssignedAppointments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color.fromARGB(255, 11, 79, 215),
       child: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Row(
@@ -281,8 +279,6 @@ class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      // surfaceTintColor: Colors.black87,
-      backgroundColor: const Color(0xFF000000),
       title: const Text('Change password'),
       contentPadding: const EdgeInsets.all(3),
       content: Column(
@@ -294,7 +290,6 @@ class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
             controller: oldPassword,
             isPassword: true,
             onChanged: (value) {},
-            // backgroundColor: Colors.black,
           ),
           const Gap(20),
           CustomTextBox(
@@ -347,7 +342,6 @@ class AppointmentFullinformation extends StatelessWidget {
       children: [
         const Gap(150),
         Card(
-          color: const Color.fromARGB(255, 11, 79, 215),
           child: Padding(
             padding: const EdgeInsets.all(13.0),
             child: Column(
