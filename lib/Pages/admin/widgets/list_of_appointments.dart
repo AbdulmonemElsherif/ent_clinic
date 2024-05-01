@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'admin_appointment_card.dart';
 
-
 class ListOfAppointments extends StatefulWidget {
   final List<Map<String, dynamic>> appointments;
   const ListOfAppointments({super.key, required this.appointments});
