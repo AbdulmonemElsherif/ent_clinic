@@ -1,14 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class WelcomeBackHeader extends StatelessWidget {
-  final String userName;
-  final String imagePath;
-
+class WelcomeBackHeader extends StatefulWidget {
   const WelcomeBackHeader({
     super.key,
-    required this.userName,
-    required this.imagePath,
   });
+
+  @override
+  State<WelcomeBackHeader> createState() => _WelcomeBackHeaderState();
+}
+
+class _WelcomeBackHeaderState extends State<WelcomeBackHeader> {
+  Future<String> getAdminName() async {
+    // Replace 'admins' and 'adminId' with the actual collection name and document ID
+    DocumentSnapshot adminDoc = await FirebaseFirestore.instance
+        .collection('admins')
+        .doc('adminId')
+        .get();
+    return adminDoc['name']; // Replace 'name' with the actual field name
+  }
+
+
+// Widget build(BuildContext context) {
+  Widget _showProfile() {
+    // Logic to show user profile
+    return Text(
+      "getAdminName()",
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+        fontSize: 24,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +52,11 @@ class WelcomeBackHeader extends StatelessWidget {
                   fontSize: 10,
                 ),
               ),
-              Text(
-                userName,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 24,
-                ),
-              ),
+              _showProfile(),
             ],
           ),
           CircleAvatar(
-            backgroundImage: NetworkImage(imagePath),
+            backgroundImage: NetworkImage("widget.imagePath"),
             maxRadius: 24,
           ),
         ],

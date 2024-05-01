@@ -15,37 +15,35 @@ class AdminAppointmentDetailsPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(appointment['doctorimage']),
+              leading: const CircleAvatar(
+                backgroundImage: NetworkImage("appointment['doctorimage']"),
               ),
-              title: Text(
-                  'Dr. ${appointment['doctorfname']} ${appointment['doctorlname']}'),
-              subtitle: Text('Specialist'),
+              title: Text('Dr. ${appointment['doctor']}'),
+              subtitle: const Text('Specialist'),
               trailing: IconButton(
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 onPressed: () {
                   // Logic to edit doctor details
                 },
               ),
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(appointment['userimage']),
+                backgroundImage: NetworkImage("appointment['userimage']"),
               ),
-              title: Text(
-                  '${appointment['userfname']} ${appointment['userlname']}'),
-              subtitle: Text(appointment['userdicescess']),
+              title: Text('${appointment['patient']}'),
+              subtitle: Text(appointment['complaint']),
               trailing: IconButton(
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 onPressed: () {
                   // Logic to edit patient details
                 },
               ),
             ),
-            Divider(),
+            const Divider(),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -55,11 +53,10 @@ class AdminAppointmentDetailsPage extends StatelessWidget {
                     'Appointment Information',
                     style: Theme.of(context).textTheme.headline6,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   InformationRow('Date:', appointment['date']),
                   InformationRow('Time:', appointment['time']),
-                  InformationRow('Type:', appointment['type']),
-                  InformationRow('Blood Type:', appointment['userbloodtype']),
+                  InformationRow('Reason:', appointment['reason']),
                 ],
               ),
             ),
@@ -84,9 +81,9 @@ class InformationRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(value),
         ],
       ),
