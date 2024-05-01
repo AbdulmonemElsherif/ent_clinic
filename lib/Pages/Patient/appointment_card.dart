@@ -49,6 +49,10 @@ return Padding(
                       appointment['reason'],
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
+                   Text(
+                        'Status: ${appointment['approvalStatus']}', // Display the appointment status
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
                   ],
                 ),
               ),
