@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 
 import 'widgets/chart_widget.dart';
 
-class AdminHomePage extends StatelessWidget {
-  AdminHomePage({super.key});
+class AdminHomePage extends StatefulWidget {
+  const AdminHomePage({super.key});
 
+  @override
+  State<AdminHomePage> createState() => _AdminHomePageState();
+}
+
+class _AdminHomePageState extends State<AdminHomePage> {
   Future<String> getAdminName() async {
     QuerySnapshot adminSnapshot = await FirebaseFirestore.instance
         .collection('users')
