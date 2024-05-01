@@ -90,7 +90,7 @@ return Padding(
                 ),
                 Expanded(
                   child: Text(
-                    appointment['time'],
+                    '${appointment['time']}',
                     style: const TextStyle(),
                   ),
                 )
