@@ -13,7 +13,8 @@ class SettingsPage extends StatelessWidget {
         children: <Widget>[
           SwitchListTile(
             title: const Text('Enable Notifications'),
-            value: true, // This would ideally be linked to a state management solution.
+            value:
+                true, // This would ideally be linked to a state management solution.
             onChanged: (bool value) {
               // Handle change in value
             },
@@ -32,6 +33,12 @@ class SettingsPage extends StatelessWidget {
           ),
           ListTile(
             title: const Text('About Us'),
+            onTap: () {
+              // Display about us information
+            },
+          ),
+          ListTile(
+            title: const Text('Logout'),
             onTap: () {
               // Display about us information
             },

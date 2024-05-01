@@ -11,7 +11,7 @@ class AdminAppointmentCard extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: ExpansionTileCard(
         title: Text(
-          '${appointment['doctorfname']} ${appointment['doctorlname']}',
+          '${appointment['doctor']}',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -19,7 +19,7 @@ class AdminAppointmentCard extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          'with ${appointment['userfname']} ${appointment['userlname']}',
+          'with ${appointment['patient']}',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -42,7 +42,7 @@ class AdminAppointmentCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${appointment['doctorfname']} ${appointment['doctorlname']}',
+                            '${appointment['doctor']}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -51,7 +51,7 @@ class AdminAppointmentCard extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'with ${appointment['userfname']} ${appointment['userlname']}',
+                            'with ${appointment['patient']}',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
