@@ -7,6 +7,7 @@ import 'package:ent_clinic/Pages/doctor/doctor.dart';
 import 'package:ent_clinic/Pages/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ent_clinic/Pages/Patient/patient_dashboard.dart';
+import 'package:ent_clinic/Pages/doctor/patientInfo.dart';
 
 class AppRoutes {
   // Signin page route
@@ -23,14 +24,23 @@ class AppRoutes {
   // Home page route
   static const String home = '/home';
   static const String doctor = '/doctor';
+  static const String doctorPatientInfo = '/doctor/patientinfo';
 }
 
 Map<String, WidgetBuilder> routes = {
   AppRoutes.signin: (context) => const SignInPage(),
   AppRoutes.home: (context) => const PatientDashboardPage(),
   // Admin pages
-  AppRoutes.adminMain: (context) => AdminMainPage(),
-  AppRoutes.adminHome: (context) => AdminHomePage(),
+
+  ///!!!!!matemsa7sh el 2 lines doooll 2o3aaaaaaaa
+  ///
+  AppRoutes.doctorPatientInfo: (context) => const PatientInfo(),
+  AppRoutes.doctor: (context) => DoctorPage(),
+
+  ///
+  ///
+  AppRoutes.adminMain: (context) => const AdminMainPage(),
+  AppRoutes.adminHome: (context) => const AdminHomePage(),
   AppRoutes.adminAppointments: (context) => AdminAppointmentsPage(),
   AppRoutes.adminStatistics: (context) => AdminStatisticsPage(),
   AppRoutes.settings: (context) => const SettingsPage(),

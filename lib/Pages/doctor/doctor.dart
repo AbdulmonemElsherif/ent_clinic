@@ -1,3 +1,6 @@
+import 'package:ent_clinic/Pages/doctor/patientInfo.dart';
+// import 'package:ent_clinic/Pages/home/patient/home/appointment_card.dart';
+import 'package:ent_clinic/Pages/home/patient/home/home_drawer.dart';
 import 'package:ent_clinic/core/GeneralWidgets/CustomTextBox.dart';
 import 'package:ent_clinic/core/GeneralWidgets/general.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +14,14 @@ class DoctorPage extends StatefulWidget {
   _DoctorPageState createState() => _DoctorPageState();
 }
 
-class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateMixin {
+class _DoctorPageState extends State<DoctorPage>
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -28,7 +32,10 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     // Dummy appointment data
+
     List<Map<String, String>> appointments = [
       {
         "name": "Hitler",
@@ -76,6 +83,17 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
 
     return SafeArea(
       child: Scaffold(
+        key: scaffoldKey,
+        appBar: AppBar(
+          title: const Text('Dashboard'),
+          leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ),
+        drawer: const HomeDrawer(),
         body: Column(
           children: [
             const Gap(30),
@@ -99,7 +117,6 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
                     tabs: const [
                       Tab(icon: Icon(Icons.calendar_month)),
                       Tab(icon: Icon(Icons.history)),
-                      Tab(icon: Icon(Icons.local_hospital)),
                     ],
                   ),
                   Expanded(
@@ -142,8 +159,6 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
                         // ... other content for remaining tabs
                         const Text(
                             'Content for Tab 2'), // Placeholder for Tab 2 content
-                        const Text(
-                            'Content for Tab 3'), // Placeholder for Tab 3 content
                       ],
                     ),
                   ),
@@ -163,6 +178,7 @@ class DoctorInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      // color: const Color.fromARGB(255, 11, 79, 215),
       // shape: ,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
@@ -204,6 +220,7 @@ class AssignedAppointments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: const Color.fromARGB(255, 11, 79, 215),
       child: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Row(
@@ -227,16 +244,22 @@ class AssignedAppointments extends StatelessWidget {
             const Spacer(),
             IconButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AppointmentFullinformation(
-                        name: name,
-                        date: date,
-                        imagepath: imagepath,
-                        time: time,
-                      );
-                    },
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context) {
+                  //     return AppointmentFullinformation(
+                  //       name: name,
+                  //       date: date,
+                  //       imagepath: imagepath,
+                  //       time: time,
+                  //     );
+                  //   },
+                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PatientInfo(),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.arrow_forward))
@@ -279,6 +302,8 @@ class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      // surfaceTintColor: Colors.black87,
+      backgroundColor: const Color(0xFF000000),
       title: const Text('Change password'),
       contentPadding: const EdgeInsets.all(3),
       content: Column(
@@ -290,6 +315,7 @@ class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
             controller: oldPassword,
             isPassword: true,
             onChanged: (value) {},
+            // backgroundColor: Colors.black,
           ),
           const Gap(20),
           CustomTextBox(
@@ -342,6 +368,7 @@ class AppointmentFullinformation extends StatelessWidget {
       children: [
         const Gap(150),
         Card(
+          color: const Color.fromARGB(255, 11, 79, 215),
           child: Padding(
             padding: const EdgeInsets.all(13.0),
             child: Column(
