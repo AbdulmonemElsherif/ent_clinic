@@ -47,7 +47,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 List<Map<String, dynamic>> allAppointments = snapshot.data!.docs
                     .map((doc) => doc.data() as Map<String, dynamic>)
                     .toList();
-                print(allAppointments);
+
                 return ListView(
                   children: [
                     WelcomeBackHeader(

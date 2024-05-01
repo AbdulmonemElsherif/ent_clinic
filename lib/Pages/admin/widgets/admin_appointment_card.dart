@@ -127,7 +127,7 @@ class AdminAppointmentCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          appointment['time'],
+                          "${appointment['time']}",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
