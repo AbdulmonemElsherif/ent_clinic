@@ -14,61 +14,72 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  List<Map<String, String>> appointments = [];
-
-  Future<void> fetchAppointments() async {
-    final QuerySnapshot snapshot = await _firestore
-        .collection('appointments')
-        .where('status', isEqualTo: 'pending')
+  Future<String> getAdminName() async {
+    QuerySnapshot adminSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('role', isEqualTo: 'admin')
         .get();
+    return adminSnapshot.docs.first['name'];
+  }
 
-    final List<Map<String, String>> fetchedAppointments = snapshot.docs.map(
-      (doc) {
-        final Map<String, String> entry = {
-          'doctor': doc['doctor'],
-          'date': doc['date'],
-          'time': doc['time'].format(context),
-          'reason': doc['reason'],
-          'patient': doc['patient'],
-          'complaint': doc['complaint'],
-        };
-
-        return entry;
-      },
-    ).toList();
-    setState(
-      () {
-        appointments = fetchedAppointments;
-      },
-    );
+  Stream<QuerySnapshot> getAppointments() {
+    return FirebaseFirestore.instance.collection('appointments').snapshots();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        const WelcomeBackHeader(),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              ListOfAppointments(appointments: appointments),
-              const SizedBox(height: 10),
-              const ChartWidget(
-                title: 'Monthly Appointments',
-                monthlyAppointments: {
-                  '1st': 88,
-                  '2nd': 76,
-                  '3rd': 130,
-                  '4th': 20,
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
+    return FutureBuilder<String>(
+      future: getAdminName(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          String adminName = snapshot.data!;
+          return StreamBuilder<QuerySnapshot>(
+            stream: getAppointments(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                List<Map<String, dynamic>> allAppointments = snapshot.data!.docs
+                    .map((doc) => doc.data() as Map<String, dynamic>)
+                    .toList();
+                return ListView(
+                  children: [
+                    WelcomeBackHeader(
+                      userName: adminName,
+                      imagePath:
+                          'https://bodyinmotion.co.nz/wp-content/uploads/2018/07/placeholder-img-min.jpg',
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: [
+                          ListOfAppointments(appointments: allAppointments),
+                          const SizedBox(height: 10),
+                          const ChartWidget(
+                            title: 'Monthly Appointments',
+                            monthlyAppointments: {
+                              '1st': 88,
+                              '2nd': 76,
+                              '3rd': 130,
+                              '4th': 20,
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          );
+        }
+      },
     );
   }
 }
