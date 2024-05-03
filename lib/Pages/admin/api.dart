@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Future<String> getAdminName() async {
   QuerySnapshot adminSnapshot = await FirebaseFirestore.instance
@@ -71,3 +72,35 @@ Future<void> setAppointmentStatusRejected(String appointmentId) async {
     return doctorAndUser;
   }
 
+Future<void> createDoctor(String email, String password, String speciality) async {
+  try {
+    // Create a new user with the Firebase Authentication
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Add a new document to the users collection in the Firestore database
+    await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+      'email': email,
+      'role': 'doctor',
+      'speciality': speciality,
+    });
+
+    print("Doctor created successfully.");
+  } catch (e) {
+    // Handle errors
+    print("Error creating doctor: $e");
+  }
+}
+Future<String> getDoctorSpecialization(String doctorId) async {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  DocumentSnapshot doc = await firestore.collection('users').doc(doctorId).get();
+
+  if (doc.exists && doc['role'] == 'doctor') {
+    return doc['Speciality'];
+  } else {
+    throw Exception('Doctor not found or user is not a doctor');
+  }
+}
