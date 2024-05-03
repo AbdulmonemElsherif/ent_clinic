@@ -84,8 +84,11 @@ class AdminAppointmentCard extends StatelessWidget {
                                 icon: const Icon(Icons.check_circle_outline),
                                 color: Colors.green,
                                 onPressed: () {
-                                  setAppointmentStatusAccepted(
-                                      appointment['id']);
+                                  if (appointment['id'] != null) {
+                                    setAppointmentStatusAccepted(appointment['id']);
+                                  } else {
+                                    print('Error: appointment ID is null');
+                                  }
                                 },
                                 tooltip: 'Accept Appointment',
                               ),
@@ -93,8 +96,11 @@ class AdminAppointmentCard extends StatelessWidget {
                                 icon: const Icon(Icons.cancel_outlined),
                                 color: Colors.red,
                                 onPressed: () {
-                                  setAppointmentStatusRejected(
-                                      appointment['id']);
+                                  if (appointment['id'] != null) {
+                                    setAppointmentStatusRejected(appointment['id']);
+                                  } else {
+                                    print('Error: appointment ID is null');
+                                  }
                                 },
                                 tooltip: 'Cancel Appointment',
                               ),

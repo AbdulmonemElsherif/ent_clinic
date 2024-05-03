@@ -59,7 +59,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: Colors.blue[800],
-        unselectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey[600],
         backgroundColor: Colors.blue[900],
       ),
     );

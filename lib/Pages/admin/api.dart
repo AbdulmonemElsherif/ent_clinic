@@ -8,17 +8,22 @@ Future<String> getAdminName() async {
   return adminSnapshot.docs.first['name'];
 }
 
-Stream<QuerySnapshot> getAppointments() {
+Stream<QuerySnapshot<Object?>> getAppointments() {
   return FirebaseFirestore.instance
       .collection('appointments')
       .snapshots();
 }
 
-Stream<QuerySnapshot> getPendingAppointments() {
+Stream<List<Map<String, dynamic>>> getPendingAppointments() {
   return FirebaseFirestore.instance
       .collection('appointments')
       .where('approvalStatus', isEqualTo: "pending")
-      .snapshots();
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((document) {
+        Map<String, dynamic> appointment = document.data();
+        appointment['id'] = document.id; // Add the document ID to the appointment map
+        return appointment;
+      }).toList());
 }
 
 Future<void> setAppointmentStatusAccepted(String appointmentId) async {

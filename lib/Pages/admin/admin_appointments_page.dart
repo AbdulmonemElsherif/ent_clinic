@@ -8,8 +8,6 @@ import 'widgets/admin_appointment_card.dart';
 class AdminAppointmentsPage extends StatelessWidget {
   AdminAppointmentsPage({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -21,7 +19,11 @@ class AdminAppointmentsPage extends StatelessWidget {
           return Text('Error: ${snapshot.error}');
         } else {
           List<Map<String, dynamic>> allAppointments = snapshot.data!.docs
-              .map((doc) => doc.data() as Map<String, dynamic>)
+              .map((doc) {
+                Map<String, dynamic> appointment = doc.data() as Map<String, dynamic>;
+                appointment['id'] = doc.id; // Add the document ID to the appointment map
+                return appointment;
+              })
               .toList();
 
           return ListView.builder(

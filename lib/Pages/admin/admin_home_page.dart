@@ -25,7 +25,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
           return Text('Error: ${snapshot.error}');
         } else {
           String adminName = snapshot.data!;
-          return StreamBuilder<QuerySnapshot>(
+          return StreamBuilder<List<Map<String, dynamic>>>(
             stream: getPendingAppointments(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,9 +33,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                List<Map<String, dynamic>> allAppointments = snapshot.data!.docs
-                    .map((doc) => doc.data() as Map<String, dynamic>)
-                    .toList();
+                List<Map<String, dynamic>> allAppointments = snapshot.data!;
 
                 return ListView(
                   children: [
