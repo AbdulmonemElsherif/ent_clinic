@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ent_clinic/Pages/admin/api.dart';
 import 'package:ent_clinic/Pages/admin/widgets/list_of_appointments.dart';
 import 'package:ent_clinic/core/widgets/welcome_back_header.dart';
 import 'package:flutter/material.dart';
@@ -13,34 +14,22 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  Future<String> getAdminName() async {
-    QuerySnapshot adminSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('role', isEqualTo: 'admin')
-        .get();
-    return adminSnapshot.docs.first['name'];
-  }
-
-  Stream<QuerySnapshot> getAppointments() {
-    return FirebaseFirestore.instance.collection('appointments').snapshots();
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
       future: getAdminName(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           String adminName = snapshot.data!;
           return StreamBuilder<QuerySnapshot>(
-            stream: getAppointments(),
+            stream: getPendingAppointments(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
