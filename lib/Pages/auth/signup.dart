@@ -277,7 +277,7 @@ class _SignUpPageState extends State<SignUpPage> {
             .set({
           'name': _nameController.text,
           'email': _emailController.text,
-          'DOB': _dobController.text,
+          'dob': _dobController.text,
           'gender': _gender == Gender.male ? 'male' : 'female',
           'phone': _phoneController.text,
           'role': 'patient',

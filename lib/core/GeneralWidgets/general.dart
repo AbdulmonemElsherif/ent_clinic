@@ -12,3 +12,35 @@ class RegularText extends StatelessWidget {
     );
   }
 }
+
+class Textbuttoncontainer extends StatelessWidget {
+  const Textbuttoncontainer({
+    super.key,
+    required this.text,
+    required this.onPressed,
+  });
+  final String? text;
+  // final Function(List<String>) onSelectionChange;
+  final VoidCallback onPressed;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: 50,
+        width: 100,
+        padding: const EdgeInsets.all(11),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          color: Colors.blue,
+        ),
+        child: Center(
+          child: RegularText(
+            text: text!,
+            fontsize: 15,
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -49,7 +49,7 @@ class _EditPatientInfoPageState extends State<EditPatientInfoPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               _nameController.text = snapshot.data!['name'];
               _genderController.text = snapshot.data!['gender'];
-              _dobController.text = snapshot.data!['DOB'];
+              _dobController.text = snapshot.data!['dob'];
               _emailController.text = snapshot.data!['email'];
               _phoneController.text = snapshot.data!['phone'];
 
@@ -197,7 +197,7 @@ class _EditPatientInfoPageState extends State<EditPatientInfoPage> {
                                   .doc(firebaseUser!.uid)
                                   .update({
                                 'name': _nameController.text,
-                                'DOB': _dobController.text,
+                                'dob': _dobController.text,
                                 'gender': _genderController.text,
                                 'email': _emailController.text,
                                 'phone': _phoneController.text,

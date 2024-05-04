@@ -1,4 +1,5 @@
 import 'package:ent_clinic/Pages/home/doctor/doctor_drawer.dart';
+import 'package:ent_clinic/Pages/home/doctor/doctor_profile.dart';
 import 'package:ent_clinic/Pages/home/doctor/patientInfo.dart';
 // import 'package:ent_clinic/Pages/home/patient/home/appointment_card.dart';
 import 'package:ent_clinic/Pages/home/patient/home/home_drawer.dart';
@@ -213,8 +214,6 @@ class DoctorInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // color: const Color.fromARGB(255, 11, 79, 215),
-      // shape: ,
       color: (Theme.of(context).brightness == Brightness.light)
           ? const Color(0xFFC8E6FF)
           : const Color(0xFF004C6E),
@@ -227,15 +226,25 @@ class DoctorInfoCard extends StatelessWidget {
               backgroundImage: AssetImage("assets/images/profilepic.jpg"),
             ),
             const Gap(20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RegularText(text: "Hello!\nDr. " "Hossam Yasser"),
-                RegularText(
-                  text: "otolaryngologist ",
-                  fontsize: 15,
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DoctorProfile(),
                 ),
-              ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(5),
+                  RegularText(text: "Hello!\nDr. " "Hossam Yasser"),
+                  RegularText(
+                    text: "otolaryngologist ",
+                    fontsize: 15,
+                  ),
+                  const Gap(5),
+                ],
+              ),
             )
           ],
         ),
@@ -272,11 +281,6 @@ class AssignedAppointments extends StatelessWidget {
               ],
             ),
             const Gap(20),
-            // const CircleAvatar(
-            //   radius: 22, // Adjust the radius according to your preference
-            //   backgroundImage: AssetImage("assets/images/profilepic.jpg"),
-            // ),
-            // const Gap(15),
             RegularText(
               text: "Patient : $name",
               fontsize: 20,
@@ -284,17 +288,6 @@ class AssignedAppointments extends StatelessWidget {
             const Spacer(),
             IconButton(
                 onPressed: () {
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (BuildContext context) {
-                  //     return AppointmentFullinformation(
-                  //       name: name,
-                  //       date: date,
-                  //       imagepath: imagepath,
-                  //       time: time,
-                  //     );
-                  //   },
-                  // );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -306,181 +299,6 @@ class AssignedAppointments extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-// Appointment('Dr. John Doe', DateTime(2024, 4, 18, 10, 0))
-//  Text('Date: ${dateTime.day}/${dateTime.month}/${dateTime.year}\n'
-//                 'Time: ${dateTime.hour}:${dateTime.minute}'),
-// class PatientInfoDialog extends StatelessWidget {
-//   const PatientInfoDialog({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Dialog();
-//   }
-// }
-
-class CHangePassswordDialog extends StatefulWidget {
-  const CHangePassswordDialog({
-    super.key,
-  });
-
-  // final Future<void> Function(String, String) changePassword;
-  @override
-  State<CHangePassswordDialog> createState() => _CHangePassswordDialogState();
-}
-
-class _CHangePassswordDialogState extends State<CHangePassswordDialog> {
-  final newPassword = TextEditingController();
-  final newPasswordConfirmation = TextEditingController();
-  final oldPassword = TextEditingController();
-
-  String? passwodDialogErrorMessage;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      // surfaceTintColor: Colors.black87,
-      backgroundColor: const Color(0xFF000000),
-      title: const Text('Change password'),
-      contentPadding: const EdgeInsets.all(3),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Gap(20),
-          CustomTextBox(
-            hintText: "Enter your old password",
-            controller: oldPassword,
-            isPassword: true,
-            onChanged: (value) {},
-            // backgroundColor: Colors.black,
-          ),
-          const Gap(20),
-          CustomTextBox(
-            hintText: "Enter your new password",
-            controller: newPassword,
-            isPassword: true,
-            onChanged: (value) {},
-          ),
-          const Gap(20),
-          CustomTextBox(
-            hintText: "Confirm your password",
-            controller: newPasswordConfirmation,
-            isPassword: true,
-            onChanged: (value) {},
-          ),
-          const Gap(15),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {},
-          child: const Text('Update'),
-        ),
-      ],
-    );
-  }
-}
-
-class AppointmentFullinformation extends StatelessWidget {
-  const AppointmentFullinformation(
-      {super.key,
-      required this.name,
-      required this.date,
-      required this.imagepath,
-      required this.time});
-  final String name;
-  final String date;
-  final String time;
-  final String imagepath;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        const Gap(150),
-        Card(
-          color: const Color.fromARGB(255, 11, 79, 215),
-          child: Padding(
-            padding: const EdgeInsets.all(13.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const CircleAvatar(
-                      radius:
-                          22, // Adjust the radius according to your preference
-                      backgroundImage:
-                          AssetImage("assets/images/profilepic.jpg"),
-                    ),
-                    const Gap(20),
-                    RegularText(
-                      text: "Patient Name: $name",
-                      fontsize: 20,
-                    ),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Gap(20),
-                        RegularText(text: date),
-                        RegularText(text: time),
-                      ],
-                    ),
-                    Container(
-                        // color:
-                        // const Color(
-                        //   0xFFC8E6FF,
-                        // ),
-
-                        padding: const EdgeInsets.all(10),
-                        width: (MediaQuery.of(context).size.width -
-                            MediaQuery.of(context).size.width / 2.5),
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            color: Color(0xFFE8F3FF),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            RegularText(
-                              text: 'Complains',
-                              fontsize: 30,
-                            ),
-                            const Gap(20),
-                            const Text(
-                              'I\'ve been experiencing a sharp pain in my lower right abdomen for the past few days\n'
-                              'I\'ve noticed a persistent cough that hasn\'t improved with over-the-counter medication.\n'
-                              'I feel a general feeling of fatigue and weakness, along with a slight fever.\n',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  overflow: TextOverflow
-                                      .visible), // Adjust font size as needed
-                            ),
-                          ],
-                        ))
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

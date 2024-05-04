@@ -5,7 +5,7 @@ import 'package:ent_clinic/Pages/profile/edit_medical_info.dart';
 import 'package:ent_clinic/Pages/profile/edit_patient_info.dart';
 
 class ProfilePage extends StatelessWidget {
-  ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   Future<DocumentSnapshot> getUserProfile(BuildContext context) async {
     var firebaseUser = FirebaseAuth.instance.currentUser;

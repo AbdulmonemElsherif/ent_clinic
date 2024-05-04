@@ -201,26 +201,39 @@ class AppointmentFullinformation extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                GestureDetector(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
+                                Textbuttoncontainer(
+                                    text: "Diagnose",
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const DiagnoseDialoge();
+                                        },
+                                      );
+                                    })
 
-                                    // color: Colors.amber,
-                                    child: const Text("Diagnose"),
-                                  ),
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const DiagnoseDialoge();
-                                      },
-                                    );
-                                  },
-                                )
+                                // GestureDetector(
+                                //   child:
+
+                                //   Container(
+                                //     padding: const EdgeInsets.all(20),
+                                //     decoration: BoxDecoration(
+                                //         color: Colors.blue,
+                                //         borderRadius:
+                                //             BorderRadius.circular(20)),
+
+                                //     // color: Colors.amber,
+                                //     child: const Text("Diagnose"),
+                                //   ),
+                                //   onTap: () {
+                                //     showDialog(
+                                //       context: context,
+                                //       builder: (BuildContext context) {
+                                //         return const DiagnoseDialoge();
+                                //       },
+                                //     );
+                                //   },
+                                // )
                               ],
                             ),
                           ],
@@ -236,34 +249,129 @@ class AppointmentFullinformation extends StatelessWidget {
   }
 }
 
-class Textbuttoncontainer extends StatelessWidget {
-  const Textbuttoncontainer({
-    super.key,
-    required this.text,
-    required this.onPressed,
-  });
-  final String? text;
-  // final Function(List<String>) onSelectionChange;
-  final VoidCallback onPressed;
+class DoneAppointmentFullinformation extends StatelessWidget {
+  const DoneAppointmentFullinformation(
+      {super.key,
+      required this.name,
+      required this.date,
+      required this.imagepath,
+      required this.time});
+  final String name;
+  final String date;
+  final String time;
+  final String imagepath;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        height: 45,
-        width: 80,
-        padding: const EdgeInsets.all(9),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          color: Colors.blue,
-        ),
-        child: Center(
-          child: RegularText(
-            text: text!,
-            fontsize: 15,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Gap(30),
+        Card(
+          color: (Theme.of(context).brightness == Brightness.light)
+              ? const Color(0xFFC8E6FF)
+              : const Color(0xFF004C6E),
+          // color: const Color.fromARGB(255, 11, 79, 215),
+          child: Padding(
+            padding: const EdgeInsets.all(13.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const CircleAvatar(
+                      radius:
+                          22, // Adjust the radius according to your preference
+                      backgroundImage:
+                          AssetImage("assets/images/profilepic.jpg"),
+                    ),
+                    const Gap(20),
+                    RegularText(
+                      text: "Patient Name: $name",
+                      fontsize: 20,
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Gap(20),
+                        RegularText(text: date),
+                        RegularText(text: time),
+                      ],
+                    ),
+                    Container(
+                        padding: const EdgeInsets.all(10),
+                        width: (MediaQuery.of(context).size.width -
+                            MediaQuery.of(context).size.width / 2.5),
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RegularText(
+                              text: 'Complains',
+                              fontsize: 30,
+                            ),
+                            const Gap(20),
+                            const Text(
+                              'I\'ve been experiencing a sharp pain in my lower right abdomen for the past few days\n'
+                              'I\'ve noticed a persistent cough that hasn\'t improved with over-the-counter medication.\n',
+                              style: TextStyle(
+                                  fontSize: 16, overflow: TextOverflow.visible),
+                              // Adjust font size as needed
+                            ),
+                            Row(
+                              children: [
+                                Textbuttoncontainer(
+                                    text: "Diagnose",
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const DiagnoseDialoge();
+                                        },
+                                      );
+                                    })
+
+                                // GestureDetector(
+                                //   child:
+
+                                //   Container(
+                                //     padding: const EdgeInsets.all(20),
+                                //     decoration: BoxDecoration(
+                                //         color: Colors.blue,
+                                //         borderRadius:
+                                //             BorderRadius.circular(20)),
+
+                                //     // color: Colors.amber,
+                                //     child: const Text("Diagnose"),
+                                //   ),
+                                //   onTap: () {
+                                //     showDialog(
+                                //       context: context,
+                                //       builder: (BuildContext context) {
+                                //         return const DiagnoseDialoge();
+                                //       },
+                                //     );
+                                //   },
+                                // )
+                              ],
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

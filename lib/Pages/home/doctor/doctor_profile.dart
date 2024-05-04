@@ -54,7 +54,15 @@ class DoctorProfile extends StatelessWidget {
                         _buildCard(
                           title: 'Doctor Information',
                           data: data,
-                          fields: ['name', 'DOB', 'gender', 'email', 'phone'],
+                          fields: [
+                            'Name',
+                            'Speaciality',
+                            'Years of experince',
+                            'DOB',
+                            'Gender',
+                            'Email',
+                            'Phone'
+                          ],
                         ),
                         // Edit Buttons
                         Row(
