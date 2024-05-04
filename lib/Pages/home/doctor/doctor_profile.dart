@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ent_clinic/Pages/profile/edit_medical_info.dart';
 import 'package:ent_clinic/Pages/profile/edit_patient_info.dart';
 
-class ProfilePage extends StatelessWidget {
-  ProfilePage({Key? key}) : super(key: key);
+class DoctorProfile extends StatelessWidget {
+  const DoctorProfile({super.key});
 
   Future<DocumentSnapshot> getUserProfile(BuildContext context) async {
     var firebaseUser = FirebaseAuth.instance.currentUser;
@@ -52,24 +52,9 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         // Patient Information Card
                         _buildCard(
-                          title: 'Patient Information',
+                          title: 'Doctor Information',
                           data: data,
                           fields: ['name', 'DOB', 'gender', 'email', 'phone'],
-                        ),
-                        // Medical Information Card
-                        _buildCard(
-                          title: 'Medical Information',
-                          data: data,
-                          fields: [
-                            'smoker',
-                            'specialMedicalHabits',
-                            'bloodType'
-                          ],
-                          listFields: {
-                            'drugs': drugs,
-                            'chronicDiseases': chronicDiseases,
-                            'allergies': data['allergies'],
-                          },
                         ),
                         // Edit Buttons
                         Row(
@@ -84,22 +69,22 @@ class ProfilePage extends StatelessWidget {
                                           EditPatientInfoPage()),
                                 );
                               },
-                              child: const Text('Edit Patient Info'),
+                              child: const Text('Edit Doctor Info'),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                var firebaseUser =
-                                    FirebaseAuth.instance.currentUser;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditMedicalInfoPage(
-                                        documentId: firebaseUser!.uid),
-                                  ),
-                                );
-                              },
-                              child: const Text('Edit Medical Info'),
-                            ),
+                            // ElevatedButton(
+                            //   onPressed: () {
+                            //     var firebaseUser =
+                            //         FirebaseAuth.instance.currentUser;
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (context) => EditMedicalInfoPage(
+                            //             documentId: firebaseUser!.uid),
+                            //       ),
+                            //     );
+                            //   },
+                            //   child: const Text('Edit Medical Info'),
+                            // ),
                           ],
                         )
                       ],

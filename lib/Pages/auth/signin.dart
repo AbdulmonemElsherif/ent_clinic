@@ -6,7 +6,7 @@ import 'package:ent_clinic/Pages/auth/widgets/password_field.dart';
 import 'package:ent_clinic/Pages/auth/widgets/signin_button.dart';
 import 'package:ent_clinic/Pages/auth/widgets/signup_button.dart';
 import 'package:ent_clinic/Pages/auth/widgets/welcome_text.dart';
-import 'package:ent_clinic/Pages/doctor/doctor.dart';
+import 'package:ent_clinic/Pages/home/doctor/doctor.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'reset_password.dart';

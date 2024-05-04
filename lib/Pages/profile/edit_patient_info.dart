@@ -49,7 +49,7 @@ class _EditPatientInfoPageState extends State<EditPatientInfoPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               _nameController.text = snapshot.data!['name'];
               _genderController.text = snapshot.data!['gender'];
-              _dobController.text = snapshot.data!['dob'];
+              _dobController.text = snapshot.data!['DOB'];
               _emailController.text = snapshot.data!['email'];
               _phoneController.text = snapshot.data!['phone'];
 
@@ -60,17 +60,21 @@ class _EditPatientInfoPageState extends State<EditPatientInfoPage> {
                     child: Column(
                       children: <Widget>[
                         DropdownButtonFormField<String>(
-                          value: _genderController.text.isEmpty 
-                            ? null 
-                            : _genderController.text[0].toUpperCase() + _genderController.text.substring(1).toLowerCase(),
+                          value: _genderController.text.isEmpty
+                              ? null
+                              : _genderController.text[0].toUpperCase() +
+                                  _genderController.text
+                                      .substring(1)
+                                      .toLowerCase(),
                           decoration: const InputDecoration(
-                            labelText: 'Gender',
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                              borderSide: BorderSide(color: Colors.grey, width: 0.0),
-                            ),
-                            border: OutlineInputBorder()
-                          ),
+                              labelText: 'Gender',
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 0.0),
+                              ),
+                              border: OutlineInputBorder()),
                           items: <String>['Male', 'Female'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -186,10 +190,14 @@ class _EditPatientInfoPageState extends State<EditPatientInfoPage> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               // Save the changes
-                              var firebaseUser = FirebaseAuth.instance.currentUser;
-                              await FirebaseFirestore.instance.collection('users').doc(firebaseUser!.uid).update({
+                              var firebaseUser =
+                                  FirebaseAuth.instance.currentUser;
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(firebaseUser!.uid)
+                                  .update({
                                 'name': _nameController.text,
-                                'dob': _dobController.text,
+                                'DOB': _dobController.text,
                                 'gender': _genderController.text,
                                 'email': _emailController.text,
                                 'phone': _phoneController.text,

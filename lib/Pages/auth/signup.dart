@@ -269,7 +269,7 @@ class _SignUpPageState extends State<SignUpPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-  
+
         // Save additional info to Firestore
         FirebaseFirestore.instance
             .collection('users')
@@ -277,12 +277,12 @@ class _SignUpPageState extends State<SignUpPage> {
             .set({
           'name': _nameController.text,
           'email': _emailController.text,
-          'dob': _dobController.text,
+          'DOB': _dobController.text,
           'gender': _gender == Gender.male ? 'male' : 'female',
           'phone': _phoneController.text,
-          'role': 'patient', 
+          'role': 'patient',
         });
-  
+
         // Navigate to the next page if the registration was successful
         Navigator.pushReplacement(
           context,
@@ -297,7 +297,7 @@ class _SignUpPageState extends State<SignUpPage> {
         } else {
           message = 'Something went wrong. Please try again later.';
         }
-  
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(message),

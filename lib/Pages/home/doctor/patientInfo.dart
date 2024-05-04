@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:core';
 
+import 'package:ent_clinic/Pages/home/doctor/doctor_drawer.dart';
 import 'package:ent_clinic/core/GeneralWidgets/general.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,39 +11,54 @@ import 'package:gap/gap.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 
-class PatientInfo extends StatelessWidget {
+class PatientInfo extends StatefulWidget {
   const PatientInfo({super.key});
 
   @override
+  State<PatientInfo> createState() => _PatientInfoState();
+}
+
+class _PatientInfoState extends State<PatientInfo> {
+  @override
   Widget build(BuildContext context) {
-    return const Expanded(
-      child: SafeArea(
-        child: Scaffold(
-            body: Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                AppointmentFullinformation(
-                  name: "Hitler",
-                  date: "24/4/2024",
-                  imagepath: "assets/images/profilepic.jpg",
-                  time: "2:00 AM",
-                ),
-                infoCard(
-                  title: 'Medical Information',
-                  data: {},
-                  fields: ['smoker', 'specialMedicalHabits', 'bloodType'],
-                  listFields: {
-                    'drugs': [],
-                    'chronicDiseases': [],
-                    'allergies': [],
-                  },
-                ),
-              ],
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    return SafeArea(
+      child: Scaffold(
+          key: scaffoldKey,
+          appBar: AppBar(
+            title: const Text('Dashboard'),
+            leading: IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                scaffoldKey.currentState?.openDrawer();
+              },
             ),
           ),
-        )),
-      ),
+          drawer: const DoctorDrawer(),
+          body: const Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  AppointmentFullinformation(
+                    name: "Hitler",
+                    date: "24/4/2024",
+                    imagepath: "assets/images/profilepic.jpg",
+                    time: "2:00 AM",
+                  ),
+                  infoCard(
+                    title: 'Medical Information',
+                    data: {},
+                    fields: ['smoker', 'specialMedicalHabits', 'bloodType'],
+                    listFields: {
+                      'drugs': [],
+                      'chronicDiseases': [],
+                      'allergies': [],
+                    },
+                  ),
+                ],
+              ),
+            ),
+          )),
     );
   }
 }
@@ -124,6 +140,9 @@ class AppointmentFullinformation extends StatelessWidget {
       children: [
         const Gap(30),
         Card(
+          color: (Theme.of(context).brightness == Brightness.light)
+              ? const Color(0xFFC8E6FF)
+              : const Color(0xFF004C6E),
           // color: const Color.fromARGB(255, 11, 79, 215),
           child: Padding(
             padding: const EdgeInsets.all(13.0),
@@ -308,6 +327,12 @@ class _DiagnoseDialogeState extends State<DiagnoseDialoge> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      // surfaceTintColor: (Theme.of(context).brightness == Brightness.light)
+      //     ? const Color(0xFFE8F3FF)
+      //     : const Color(0xFF004C6E),
+      backgroundColor: (Theme.of(context).brightness == Brightness.light)
+          ? const Color(0xFFE8F3FF)
+          : const Color(0xFF004C6E),
       content: SizedBox(
         height: 1000,
         width: 1500,
@@ -319,9 +344,15 @@ class _DiagnoseDialogeState extends State<DiagnoseDialoge> {
               children: [
                 TextField(
                   maxLines: 10,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
+                      hintStyle: TextStyle(
+                        color:
+                            (Theme.of(context).brightness == Brightness.light)
+                                ? const Color(0xFF001C2B)
+                                : const Color(0xFFE8F3FF),
+                      ),
                       hintText: 'Medical examination',
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)))),
                   controller: _descriptionController,
                 ),
@@ -415,11 +446,29 @@ class _DropDownState extends State<MultiDropDownCustomized> {
   @override
   Widget build(BuildContext context) {
     return MultiSelectDialogField(
-      title: RegularText(text: widget.hintText),
-      buttonText: Text(widget.hintText),
+      backgroundColor: (Theme.of(context).brightness == Brightness.light)
+          ? const Color(0xFFE8F3FF)
+          : const Color(0xFF004C6E),
+      checkColor: const Color(0xFFE8F3FF),
+      title: Text(widget.hintText,
+          style: TextStyle(
+            color: (Theme.of(context).brightness == Brightness.light)
+                ? const Color(0xFF001C2B)
+                : const Color(0xFFE8F3FF),
+          )),
+      buttonText: Text(widget.hintText,
+          style: const TextStyle(
+              // decorationColor: Color(0xFFE8F3FF),
+              )),
+      // unselectedColor: const Color(0xFFE8F3FF),
       buttonIcon: const Icon(Icons.add),
       items: widget.items.map((item) => MultiSelectItem(item, item)).toList(),
-      selectedColor: Colors.blue,
+      selectedColor: const Color.fromARGB(255, 12, 124, 176),
+      itemsTextStyle: TextStyle(
+        color: (Theme.of(context).brightness == Brightness.light)
+            ? const Color(0xFF001C2B)
+            : const Color(0xFFE8F3FF),
+      ),
       onConfirm: (values) {
         setState(() {
           selected = values;

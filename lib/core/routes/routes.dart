@@ -3,11 +3,11 @@ import 'package:ent_clinic/Pages/admin/admin_appointments_page.dart';
 import 'package:ent_clinic/Pages/admin/admin_home_page.dart';
 import 'package:ent_clinic/Pages/admin/admin_statistics_page.dart';
 import 'package:ent_clinic/Pages/auth/signin.dart';
-import 'package:ent_clinic/Pages/doctor/doctor.dart';
+import 'package:ent_clinic/Pages/home/doctor/doctor.dart';
 import 'package:ent_clinic/Pages/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ent_clinic/Pages/Patient/patient_dashboard.dart';
-import 'package:ent_clinic/Pages/doctor/patientInfo.dart';
+import 'package:ent_clinic/Pages/home/doctor/patientInfo.dart';
 
 class AppRoutes {
   // Signin page route
@@ -34,7 +34,7 @@ Map<String, WidgetBuilder> routes = {
 
   ///!!!!!matemsa7sh el 2 lines doooll 2o3aaaaaaaa
   ///
-  AppRoutes.doctorPatientInfo: (context) => const PatientInfo(),
+  AppRoutes.doctorPatientInfo: (context) =>  PatientInfo(),
   AppRoutes.doctor: (context) => DoctorPage(),
 
   ///
