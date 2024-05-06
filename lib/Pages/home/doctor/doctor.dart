@@ -10,7 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-
+import 'package:intl/intl.dart';
 class DoctorPage extends StatefulWidget {
   DoctorPage({Key? key}) : super(key: key);
 
@@ -72,103 +72,93 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-    return SafeArea(
-      child: Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          title: const Text('Dashboard'),
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              scaffoldKey.currentState?.openDrawer();
-            },
+      return SafeArea(
+        child: Scaffold(
+          key: scaffoldKey,
+          appBar: AppBar(
+            title: const Text('Dashboard'),
+            leading: IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                scaffoldKey.currentState?.openDrawer();
+              },
+            ),
           ),
-        ),
-        drawer: const DoctorDrawer(),
-        body: Column(
-          children: [
-            const Gap(30),
-            const DoctorInfoCard(),
-            const Gap(20),
-            const Gap(10),
-            Expanded(
-              child: Column(
-                children: [
-                  TabBar(
-                    controller: _tabController,
-                    tabs: const [
-                      Tab(
-                        icon: Icon(Icons.calendar_month),
-                        text: 'Appointments',
-                      ),
-                      Tab(
-                        icon: Icon(Icons.history),
-                        text: 'History',
-                      ),
-                    ],
+          drawer: const DoctorDrawer(),
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                const DoctorInfoCard(),
+                const Divider(),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    'Appointments',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        FutureBuilder<List<QueryDocumentSnapshot>>(
-                          future: fetchAppointments(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              return ListView.builder(
-                                itemCount: snapshot.data?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  final doc = snapshot.data![index];
-                                  return ListTile(
-                                    leading: Icon(
-                                      doc['approvalStatus'] == 'approved' ? Icons.pending : Icons.check_circle,
-                                      color: doc['approvalStatus'] == 'approved' ? Colors.orange : Colors.green,
-                                    ),
-                                    title: Text('Patient: ${doc['patientName']}'),
-                                    subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Complaint: ${doc['complaint']}'),
-                                        Text('Date: ${doc['date'].toDate()}'),
-                                        Text('Time: ${doc['time']}'),
-                                        Text('Reason: ${doc['reason']}'),
-                                      ],
-                                    ),
-                                    trailing: IconButton(
-                                      icon: Icon(Icons.arrow_forward),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => PatientInfo(),
-                                          ),
-                                        );
-                                      },
+                ),
+                Expanded(
+                  child: FutureBuilder<List<QueryDocumentSnapshot>>(
+                    future: fetchAppointments(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return ListView.builder(
+                          itemCount: snapshot.data?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            final doc = snapshot.data![index];
+                            return FutureBuilder<String>(
+                              future: fetchPatientName(doc['patient']),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  return Card(
+                                    child: ListTile(
+                                      // Removed the leading CircleAvatar
+                                      title: Text(snapshot.data ?? 'No name'),
+                                      subtitle: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
+                                          Text('Complaint: ${doc['complaint']}'), // Added the complaint field
+                                        ],
+                                      ),
+                                      trailing: IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => const PatientInfo(),
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.arrow_forward),
+                                      ),
                                     ),
                                   );
-                                },
-                              );
-                            }
+                                }
+                              },
+                            );
                           },
-                        ),
-                        // Placeholder for History tab
-                        Center(child: Text('History tab content goes here')),
-                      ],
-                    ),
+                        );
+                      }
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
-}
 
 class DoctorInfoCard extends StatelessWidget {
   const DoctorInfoCard({Key? key}) : super(key: key);
@@ -204,36 +194,21 @@ class DoctorInfoCard extends StatelessWidget {
             color: (Theme.of(context).brightness == Brightness.light)
                 ? const Color(0xFFC8E6FF)
                 : const Color(0xFF004C6E),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage("assets/images/profilepic.jpg"),
-                  ),
-                  const Gap(20),
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DoctorProfile(),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Gap(5),
-                        RegularText(text: "Hello! ${doc['name']}"), 
-                        RegularText(
-                          text: "${doc['Speciality']}",
-                          fontsize: 15,
-                        ),
-                        const Gap(5),
-                      ],
-                    ),
-                  )
-                ],
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DoctorProfile(),
+                ),
+              ),
+              title: Text(
+                "Hello! ${doc['name']}",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                "${doc['Speciality']}",
+                style: TextStyle(fontSize: 15),
               ),
             ),
           );
