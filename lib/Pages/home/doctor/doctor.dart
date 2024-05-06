@@ -1,26 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/Pages/home/doctor/doctor_drawer.dart';
 import 'package:ent_clinic/Pages/home/doctor/doctor_profile.dart';
 import 'package:ent_clinic/Pages/home/doctor/patientInfo.dart';
-// import 'package:ent_clinic/Pages/home/patient/home/appointment_card.dart';
 import 'package:ent_clinic/Pages/home/patient/home/home_drawer.dart';
 import 'package:ent_clinic/core/GeneralWidgets/CustomTextBox.dart';
 import 'package:ent_clinic/core/GeneralWidgets/general.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 
 class DoctorPage extends StatefulWidget {
-  // ignore: prefer_const_constructors_in_immutables
-  DoctorPage({super.key});
+  DoctorPage({Key? key}) : super(key: key);
 
   @override
   _DoctorPageState createState() => _DoctorPageState();
 }
 
-class _DoctorPageState extends State<DoctorPage>
-    with SingleTickerProviderStateMixin {
+class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -34,50 +34,43 @@ class _DoctorPageState extends State<DoctorPage>
     super.dispose();
   }
 
+  Future<List<QueryDocumentSnapshot>> fetchDoctors() async {
+    final QuerySnapshot snapshot = await _firestore
+        .collection('users')
+        .where('role', isEqualTo: 'doctor')
+        .get();
+    return snapshot.docs;
+  }
+  Future<String> fetchPatientName(String patientId) async {
+    final DocumentSnapshot snapshot = await _firestore
+        .collection('users')
+        .doc(patientId)
+        .get();
+    return snapshot['name'];
+  }
+    
+  Future<List<QueryDocumentSnapshot>> fetchAppointments() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final User? currentUser = _auth.currentUser;
+
+    if (currentUser == null) {
+      throw Exception('No user is currently logged in');
+    }
+    print('Current user ID: ${currentUser.uid}'); // Debugging line
+
+    final QuerySnapshot snapshot = await _firestore
+        .collection('appointments')
+        .where('doctorID', isEqualTo: currentUser.uid)
+        .where('approvalStatus', isEqualTo: 'accepted')
+        .get();
+
+    print('Fetched appointments: ${snapshot.docs}'); // Debugging line
+
+    return snapshot.docs;
+  }
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-    // Dummy appointment data
-
-    List<Map<String, String>> appointments = [
-      {
-        "name": "Hitler",
-        "date": "24/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "2:00 AM",
-      },
-      {
-        "name": "Hitler",
-        "date": "24/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "2:00 AM",
-      },
-      {
-        "name": "Hitler",
-        "date": "24/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "2:00 AM",
-      },
-      {
-        "name": "Hitler",
-        "date": "24/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "2:00 AM",
-      },
-      {
-        "name": "Hitler",
-        "date": "24/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "2:00 AM",
-      },
-      {
-        "name": "Hitler",
-        "date": "24/4/2024",
-        "imagepath": "assets/images/profilepic.jpg",
-        "time": "2:00 AM",
-      },
-    ];
 
     return SafeArea(
       child: Scaffold(
@@ -102,8 +95,7 @@ class _DoctorPageState extends State<DoctorPage>
               child: Column(
                 children: [
                   TabBar(
-                    controller: _tabController, // Provide the TabController
-                    // Add labels for each tab
+                    controller: _tabController,
                     tabs: const [
                       Tab(
                         icon: Icon(Icons.calendar_month),
@@ -117,84 +109,54 @@ class _DoctorPageState extends State<DoctorPage>
                   ),
                   Expanded(
                     child: TabBarView(
-                      // Wrap content with TabBarView
                       controller: _tabController,
                       children: [
-                        ListView(
-                          physics: const ClampingScrollPhysics(),
-                          scrollDirection:
-                              Axis.horizontal, // Horizontal scrolling
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: appointments.length,
+                        FutureBuilder<List<QueryDocumentSnapshot>>(
+                          future: fetchAppointments(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return ListView.builder(
+                                itemCount: snapshot.data?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  // Extract appointment data for the current index
-                                  Map<String, String> appointment =
-                                      appointments[index];
-
-                                  return Column(
-                                    children: [
-                                      const Gap(5),
-                                      AssignedAppointments(
-                                        name: appointment["name"] ?? "",
-                                        date: appointment["date"] ?? "",
-                                        imagepath:
-                                            appointment["imagepath"] ?? "",
-                                        time: appointment["time"] ?? "",
-                                      ),
-                                    ],
+                                  final doc = snapshot.data![index];
+                                  return ListTile(
+                                    leading: Icon(
+                                      doc['approvalStatus'] == 'approved' ? Icons.pending : Icons.check_circle,
+                                      color: doc['approvalStatus'] == 'approved' ? Colors.orange : Colors.green,
+                                    ),
+                                    title: Text('Patient: ${doc['patientName']}'),
+                                    subtitle: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Complaint: ${doc['complaint']}'),
+                                        Text('Date: ${doc['date'].toDate()}'),
+                                        Text('Time: ${doc['time']}'),
+                                        Text('Reason: ${doc['reason']}'),
+                                      ],
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.arrow_forward),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PatientInfo(),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   );
                                 },
-                              ),
-                            ),
-                          ],
+                              );
+                            }
+                          },
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView(
-                            physics: const ClampingScrollPhysics(),
-                            scrollDirection:
-                                Axis.horizontal, // Horizontal scrolling
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: appointments.length,
-                                  itemBuilder: (context, index) {
-                                    // Extract appointment data for the current index
-                                    Map<String, String> appointment =
-                                        appointments[index];
-
-                                    return Column(
-                                      children: [
-                                        const Gap(5),
-                                        AssignedAppointments(
-                                          name: appointment["name"] ?? "",
-                                          date: appointment["date"] ?? "",
-                                          imagepath:
-                                              appointment["imagepath"] ?? "",
-                                          time: appointment["time"] ?? "",
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        //
-
-                        // ListView(children: const [
-                        //   Text('Content for Tab 2'),
-                        //   Text('Content for Tab 2'),
-                        //   Text('Content for Tab 2'),
-                        //   Text('Content for Tab 2'),
-                        // ]), // Placeholder for Tab 2 content
+                        // Placeholder for History tab
+                        Center(child: Text('History tab content goes here')),
                       ],
                     ),
                   ),
@@ -209,50 +171,77 @@ class _DoctorPageState extends State<DoctorPage>
 }
 
 class DoctorInfoCard extends StatelessWidget {
-  const DoctorInfoCard({super.key});
+  const DoctorInfoCard({Key? key}) : super(key: key);
+
+  Future<Map<String, dynamic>> fetchDoctorDetails() async {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final User? currentUser = _auth.currentUser;
+
+    if (currentUser == null) {
+      throw Exception('No user is currently logged in');
+    }
+
+    final DocumentSnapshot snapshot = await _firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    return snapshot.data() as Map<String, dynamic>;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: (Theme.of(context).brightness == Brightness.light)
-          ? const Color(0xFFC8E6FF)
-          : const Color(0xFF004C6E),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              radius: 30, // Adjust the radius according to your preference
-              backgroundImage: AssetImage("assets/images/profilepic.jpg"),
-            ),
-            const Gap(20),
-            GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DoctorProfile(),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return FutureBuilder<Map<String, dynamic>>(
+      future: fetchDoctorDetails(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final doc = snapshot.data!;
+          return Card(
+            color: (Theme.of(context).brightness == Brightness.light)
+                ? const Color(0xFFC8E6FF)
+                : const Color(0xFF004C6E),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
+              child: Row(
                 children: [
-                  const Gap(5),
-                  RegularText(text: "Hello!\nDr. " "Hossam Yasser"),
-                  RegularText(
-                    text: "otolaryngologist ",
-                    fontsize: 15,
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage("assets/images/profilepic.jpg"),
                   ),
-                  const Gap(5),
+                  const Gap(20),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DoctorProfile(),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Gap(5),
+                        RegularText(text: "Hello! ${doc['name']}"), 
+                        RegularText(
+                          text: "${doc['Speciality']}",
+                          fontsize: 15,
+                        ),
+                        const Gap(5),
+                      ],
+                    ),
+                  )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }
-
 class AssignedAppointments extends StatelessWidget {
   const AssignedAppointments(
       {super.key,

@@ -19,7 +19,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? selectedComplaint;
 
-  List<String> doctors = [];
+  Map<String, String> doctors = {};
   List<String> reasons = [
     'General Checkup',
     'Follow-up Appointment',
@@ -78,16 +78,18 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
   }
 
   Future<void> fetchDoctors() async {
-    final QuerySnapshot snapshot = await _firestore
-        .collection('users')
-        .where('role', isEqualTo: 'doctor')
-        .get();
-    final List<String> fetchedDoctors =
-        snapshot.docs.map((doc) => doc['name']).toList().cast<String>();
-    setState(() {
-      doctors = fetchedDoctors;
-    });
+  final QuerySnapshot snapshot = await _firestore
+      .collection('users')
+      .where('role', isEqualTo: 'doctor')
+      .get();
+  final Map<String, String> fetchedDoctors = {};
+  for (var doc in snapshot.docs) {
+    fetchedDoctors[doc['name']] = doc.id; // Store the doctor's name and ID
   }
+  setState(() {
+    doctors = fetchedDoctors;
+  });
+}
 
   void setComplaints(List<String> complaints) {
     setState(() {
@@ -106,6 +108,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
     try {
       await _firestore.collection('appointments').add({
         'doctor': selectedDoctor,
+        'doctorID' : doctors[selectedDoctor],
         'date': selectedDate,
         'time': selectedTime.format(context),
         'reason': selectedReason,
@@ -167,19 +170,19 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             DropdownButton<String>(
-              value: selectedDoctor,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedDoctor = newValue;
-                });
-              },
-              items: doctors.map((doctor) {
-                return DropdownMenuItem<String>(
-                  value: doctor,
-                  child: Text(doctor),
-                );
-              }).toList(),
-            ),
+                  value: selectedDoctor,
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedDoctor = newValue;
+                    });
+                  },
+                  items: doctors.keys.map((doctor) {
+                    return DropdownMenuItem<String>(
+                      value: doctor,
+                      child: Text(doctor),
+                    );
+                  }).toList(),
+                ),
             const SizedBox(height: 20),
             const Text(
               'Select Date and Time:',

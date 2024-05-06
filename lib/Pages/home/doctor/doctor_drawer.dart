@@ -52,10 +52,8 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                             size: 48, color: Colors.white),
                         const SizedBox(width: 16),
                         Expanded(
-                          // Wrap the Text widget with Expanded
                           child: Text(
-                            snapshot
-                                .data!['name'], // Replace with actual user name
+                            snapshot.data!['name'],
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -73,40 +71,28 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
               }
             },
           ),
-          // ListTile(
-          //   title: const Text('Book Appointment'),
-          //   onTap: () {
-          //     Navigator.pop(context);
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => CreateAppointmentPage(
-          //             patient: FirebaseAuth.instance.currentUser!.uid),
-          //       ),
-          //     );
-          //   },
-          // ),
           ListTile(
-            title: const Text('Services'),
+            title: const Text('My Patients'),
             onTap: () {
               Navigator.pop(context);
+              // TODO: Implement navigation to My Patients page
             },
           ),
           ListTile(
-            title: const Text('About Us'),
+            title: const Text('My Appointments'),
+            onTap: () {
+              Navigator.pop(context);
+              // TODO: Implement navigation to My Appointments page
+            },
+          ),
+          ListTile(
+            title: const Text('My Profile'),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AboutUsPage()),
+                MaterialPageRoute(builder: (context) => DoctorProfile()),
               );
-            },
-          ),
-          ListTile(
-            title: const Text('Contact Us'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Implement contact us page
             },
           ),
           const Divider(),
