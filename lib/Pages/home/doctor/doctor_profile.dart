@@ -1,31 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ent_clinic/Pages/profile/edit_medical_info.dart';
-import 'package:ent_clinic/Pages/profile/edit_patient_info.dart';
 
 class DoctorProfile extends StatelessWidget {
   const DoctorProfile({super.key});
 
-  Future<DocumentSnapshot> getUserProfile(BuildContext context) async {
-    var firebaseUser = FirebaseAuth.instance.currentUser;
-    DocumentSnapshot userProfile = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(firebaseUser!.uid)
-        .get();
-
-    if (!userProfile.exists) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              EditMedicalInfoPage(documentId: firebaseUser.uid),
-        ),
-      );
-      throw Exception('User profile does not exist');
-    }
-
-    return userProfile;
+  Future<DocumentSnapshot?> getDoctorProfile(BuildContext context) async {
+      var firebaseUser = FirebaseAuth.instance.currentUser;
+      DocumentSnapshot userProfile = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser!.uid)
+          .get();
+    
+      if (userProfile.exists && userProfile.get('role') == 'doctor') {
+        return userProfile;
+      } else {
+        // Return null if the user is not a doctor
+        return null;
+      }
   }
 
   @override
@@ -36,65 +28,31 @@ class DoctorProfile extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: FutureBuilder(
-          future: getUserProfile(context),
-          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        child: FutureBuilder<DocumentSnapshot?>(
+          future: getDoctorProfile(context),
+          builder: (context, AsyncSnapshot<DocumentSnapshot?> snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData && snapshot.data != null) {
                 Map<String, dynamic>? data =
                     snapshot.data!.data() as Map<String, dynamic>?;
                 if (data != null) {
-                  String? bloodType = data['bloodType'];
-                  List<dynamic>? chronicDiseases = data['chronicDiseases'];
-                  List<dynamic>? drugs = data['drugs'];
                   return SingleChildScrollView(
                     child: Column(
                       children: [
-                        // Patient Information Card
+                        // Doctor Information Card
                         _buildCard(
                           title: 'Doctor Information',
                           data: data,
                           fields: [
                             'Name',
-                            'Speaciality',
-                            'Years of experince',
+                            'Speciality',
+                            'Years of Experience',
                             'DOB',
                             'Gender',
                             'Email',
                             'Phone'
                           ],
                         ),
-                        // Edit Buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          EditPatientInfoPage()),
-                                );
-                              },
-                              child: const Text('Edit Doctor Info'),
-                            ),
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     var firebaseUser =
-                            //         FirebaseAuth.instance.currentUser;
-                            //     Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //         builder: (context) => EditMedicalInfoPage(
-                            //             documentId: firebaseUser!.uid),
-                            //       ),
-                            //     );
-                            //   },
-                            //   child: const Text('Edit Medical Info'),
-                            // ),
-                          ],
-                        )
                       ],
                     ),
                   );
@@ -118,7 +76,6 @@ class DoctorProfile extends StatelessWidget {
     required String title,
     required Map<String, dynamic> data,
     required List<String> fields,
-    Map<String, List<dynamic>?>? listFields,
   }) {
     return Card(
       elevation: 4,
@@ -135,31 +92,37 @@ class DoctorProfile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            ...fields.map((field) => ListTile(
-                  title: Text(field),
-                  subtitle: Text(data[field] ?? 'N/A'),
-                )),
-            if (listFields != null)
-              ...listFields.entries.map((entry) => ListTile(
-                    title: Text(entry.key),
-                    subtitle: _buildList(entry.value),
-                  )),
+            ListTile(
+              title: const Text('Speciality'),
+              subtitle: Text(data['Speciality'] ?? 'N/A'),
+            ),
+            ListTile(
+              title: const Text('DOB'),
+              subtitle: Text(data['dob'] ?? 'N/A'),
+            ),
+            ListTile(
+              title: const Text('Email'),
+              subtitle: Text(data['email'] ?? 'N/A'),
+            ),
+            ListTile(
+              title: const Text('Gender'),
+              subtitle: Text(data['gender'] ?? 'N/A'),
+            ),
+            ListTile(
+              title: const Text('Name'),
+              subtitle: Text(data['name'] ?? 'N/A'),
+            ),
+            ListTile(
+              title: const Text('Phone'),
+              subtitle: Text(data['phone'] ?? 'N/A'),
+            ),
+            ListTile(
+              title: const Text('Role'),
+              subtitle: Text(data['role'] ?? 'N/A'),
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildList(List<dynamic>? items) {
-    if (items == null || items.isEmpty) {
-      return const Text('N/A');
-    }
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return Text(items[index]);
-      },
     );
   }
 }
