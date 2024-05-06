@@ -72,7 +72,10 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-      return SafeArea(
+   
+   return SafeArea(
+      child: DefaultTabController(
+        length: 2,
         child: Scaffold(
           key: scaffoldKey,
           appBar: AppBar(
@@ -85,80 +88,87 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
             ),
           ),
           drawer: const DoctorDrawer(),
-          body: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                const DoctorInfoCard(),
-                const Divider(),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    'Appointments',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Expanded(
-                  child: FutureBuilder<List<QueryDocumentSnapshot>>(
-                    future: fetchAppointments(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return ListView.builder(
-                          itemCount: snapshot.data?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            final doc = snapshot.data![index];
-                            return FutureBuilder<String>(
-                              future: fetchPatientName(doc['patient']),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return CircularProgressIndicator();
-                                } else if (snapshot.hasError) {
-                                  return Text('Error: ${snapshot.error}');
-                                } else {
-                                  return Card(
-                                    child: ListTile(
-                                      // Removed the leading CircleAvatar
-                                      title: Text(snapshot.data ?? 'No name'),
-                                      subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text('Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
-                                          Text('Complaint: ${doc['complaint']}'), // Added the complaint field
-                                        ],
+          body: Column(
+            children: [
+              const DoctorInfoCard(),
+              const Divider(),
+              TabBar(
+                labelColor: Theme.of(context).primaryColor,
+                unselectedLabelColor: Colors.grey,
+                tabs: const [
+                  Tab(text: 'Appointments'),
+                  Tab(text: 'History'),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    // Appointments tab
+                    FutureBuilder<List<QueryDocumentSnapshot>>(
+                      future: fetchAppointments(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return ListView.builder(
+                            itemCount: snapshot.data?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              final doc = snapshot.data![index];
+                              return FutureBuilder<String>(
+                                future: fetchPatientName(doc['patient']),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    return Card(
+                                      child: ListTile(
+                                        title: Text(snapshot.data ?? 'No name'),
+                                        subtitle: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
+                                            Text('Complaint: ${doc['complaint']}'),
+                                          ],
+                                        ),
+                                        trailing: IconButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => const PatientInfo(),
+                                              ),
+                                            );
+                                          },
+                                          icon: const Icon(Icons.arrow_forward),
+                                        ),
                                       ),
-                                      trailing: IconButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => const PatientInfo(),
-                                            ),
-                                          );
-                                        },
-                                        icon: const Icon(Icons.arrow_forward),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                            );
-                          },
-                        );
-                      }
-                    },
-                  ),
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    // History tab
+                    Center(
+                      child: Text('History tab content goes here'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
-    }
+      ),
+    );
   }
+}
 
 class DoctorInfoCard extends StatelessWidget {
   const DoctorInfoCard({Key? key}) : super(key: key);
