@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/Pages/appointment/create_appointment_page.dart';
 import 'package:ent_clinic/Pages/auth/signin.dart';
 import 'package:ent_clinic/Pages/home/about_us/about_us.dart';
-import 'package:ent_clinic/Pages/home/doctor/doctor_profile.dart';
+import 'package:ent_clinic/Pages/home/doctor/Screens/doctor_profile_screen.dart';
 import 'package:ent_clinic/Pages/profile/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +43,8 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => DoctorProfile()),
+                        MaterialPageRoute(
+                            builder: (context) => const DoctorProfile()),
                       );
                     },
                     child: Row(
@@ -91,7 +92,7 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DoctorProfile()),
+                MaterialPageRoute(builder: (context) => const DoctorProfile()),
               );
             },
           ),

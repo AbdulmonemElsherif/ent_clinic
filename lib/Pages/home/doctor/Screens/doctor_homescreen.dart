@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ent_clinic/Pages/home/doctor/doctor_drawer.dart';
-import 'package:ent_clinic/Pages/home/doctor/doctor_profile.dart';
-import 'package:ent_clinic/Pages/home/doctor/patientInfo.dart';
+import 'package:ent_clinic/Pages/home/doctor/doctorHomeScreen%20widgets/doctor_drawer.dart';
+import 'package:ent_clinic/Pages/home/doctor/Screens/doctor_profile_screen.dart';
+import 'package:ent_clinic/Pages/home/doctor/Screens/appointment_fullinformation_screen.dart';
 import 'package:ent_clinic/Pages/home/patient/home/home_drawer.dart';
 import 'package:ent_clinic/core/GeneralWidgets/CustomTextBox.dart';
 import 'package:ent_clinic/core/GeneralWidgets/general.dart';
@@ -11,14 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-class DoctorPage extends StatefulWidget {
-  DoctorPage({Key? key}) : super(key: key);
+
+class DoctorHomeScreen extends StatefulWidget {
+  const DoctorHomeScreen({super.key});
 
   @override
-  _DoctorPageState createState() => _DoctorPageState();
+  _DoctorHomeScreenState createState() => _DoctorHomeScreenState();
 }
 
-class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateMixin {
+class _DoctorHomeScreenState extends State<DoctorHomeScreen>
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -41,17 +43,16 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
         .get();
     return snapshot.docs;
   }
+
   Future<String> fetchPatientName(String patientId) async {
-    final DocumentSnapshot snapshot = await _firestore
-        .collection('users')
-        .doc(patientId)
-        .get();
+    final DocumentSnapshot snapshot =
+        await _firestore.collection('users').doc(patientId).get();
     return snapshot['name'];
   }
-    
+
   Future<List<QueryDocumentSnapshot>> fetchAppointments() async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    final User? currentUser = _auth.currentUser;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? currentUser = auth.currentUser;
 
     if (currentUser == null) {
       throw Exception('No user is currently logged in');
@@ -68,12 +69,12 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
 
     return snapshot.docs;
   }
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-   
-   return SafeArea(
+    return SafeArea(
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -107,8 +108,9 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
                     FutureBuilder<List<QueryDocumentSnapshot>>(
                       future: fetchAppointments(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
@@ -119,8 +121,9 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
                               return FutureBuilder<String>(
                                 future: fetchPatientName(doc['patient']),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
                                   } else if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
                                   } else {
@@ -128,10 +131,13 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
                                       child: ListTile(
                                         title: Text(snapshot.data ?? 'No name'),
                                         subtitle: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Text('Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
-                                            Text('Complaint: ${doc['complaint']}'),
+                                            Text(
+                                                'Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
+                                            Text(
+                                                'Complaint: ${doc['complaint']}'),
                                           ],
                                         ),
                                         trailing: IconButton(
@@ -139,7 +145,8 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => const PatientInfo(),
+                                                builder: (context) =>
+                                                    const AppointmentFullInformationScreen(),
                                               ),
                                             );
                                           },
@@ -156,7 +163,7 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
                       },
                     ),
                     // History tab
-                    Center(
+                    const Center(
                       child: Text('History tab content goes here'),
                     ),
                   ],
@@ -171,21 +178,19 @@ class _DoctorPageState extends State<DoctorPage> with SingleTickerProviderStateM
 }
 
 class DoctorInfoCard extends StatelessWidget {
-  const DoctorInfoCard({Key? key}) : super(key: key);
+  const DoctorInfoCard({super.key});
 
   Future<Map<String, dynamic>> fetchDoctorDetails() async {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    final User? currentUser = _auth.currentUser;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? currentUser = auth.currentUser;
 
     if (currentUser == null) {
       throw Exception('No user is currently logged in');
     }
 
-    final DocumentSnapshot snapshot = await _firestore
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
+    final DocumentSnapshot snapshot =
+        await firestore.collection('users').doc(currentUser.uid).get();
     return snapshot.data() as Map<String, dynamic>;
   }
 
@@ -195,7 +200,7 @@ class DoctorInfoCard extends StatelessWidget {
       future: fetchDoctorDetails(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -205,7 +210,8 @@ class DoctorInfoCard extends StatelessWidget {
                 ? const Color(0xFFC8E6FF)
                 : const Color(0xFF004C6E),
             child: ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 18),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -214,65 +220,17 @@ class DoctorInfoCard extends StatelessWidget {
               ),
               title: Text(
                 "Hello! ${doc['name']}",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
                 "${doc['Speciality']}",
-                style: TextStyle(fontSize: 15),
+                style: const TextStyle(fontSize: 15),
               ),
             ),
           );
         }
       },
-    );
-  }
-}
-class AssignedAppointments extends StatelessWidget {
-  const AssignedAppointments(
-      {super.key,
-      required this.name,
-      required this.date,
-      required this.imagepath,
-      required this.time});
-  final String name;
-  final String date;
-  final String time;
-  final String imagepath;
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: (Theme.of(context).brightness == Brightness.light)
-          ? const Color(0xFFC8E6FF)
-          : const Color(0xFF004C6E),
-      child: Padding(
-        padding: const EdgeInsets.all(13.0),
-        child: Row(
-          children: [
-            Column(
-              children: [
-                RegularText(text: date),
-                RegularText(text: time),
-              ],
-            ),
-            const Gap(20),
-            RegularText(
-              text: "Patient : $name",
-              fontsize: 20,
-            ),
-            const Spacer(),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PatientInfo(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.arrow_forward))
-          ],
-        ),
-      ),
     );
   }
 }
