@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:core';
 
 import 'package:ent_clinic/Pages/home/doctor/appointments%20widgets/diagnose_dialog.dart';
 import 'package:ent_clinic/Pages/home/doctor/doctorHomeScreen%20widgets/doctor_drawer.dart';

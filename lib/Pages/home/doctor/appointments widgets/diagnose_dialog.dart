@@ -14,10 +14,27 @@ class DiagnoseDialoge extends StatefulWidget {
 
 class _DiagnoseDialogeState extends State<DiagnoseDialoge> {
   List<String> medications = [
-    "Medication 1 (Brand Name)",
-    "Medication 2 (Brand Name)",
-    "Medication 3 (Brand Name)",
-    "Medication 4 (Brand Name)"
+    "Amoxicillin",
+    "Augmentin",
+    "Azithromycin",
+    "Bactrim",
+    "Biaxin",
+    "Cefzil",
+    "Cipro",
+    "Cleocin",
+    "Duricef",
+    "Erythromycin",
+    "Keflex",
+    "Levaquin",
+    "Omnicef",
+    "Septra",
+    "Suprax",
+    "Tetracycline",
+    "Vantin",
+    "Zithromax",
+    "Zmax",
+    "Zosyn",
+    "Zyvox"
   ];
   List<String> referrals = [
     "speacialit1",
