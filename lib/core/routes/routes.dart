@@ -34,7 +34,7 @@ Map<String, WidgetBuilder> routes = {
 
   ///!!!!!matemsa7sh el 2 lines doooll 2o3aaaaaaaa
   ///
-  AppRoutes.doctorPatientInfo: (context) => AppointmentFullInformationScreen(),
+  AppRoutes.doctorPatientInfo: (context) => const AppointmentFullInformationScreen(appointmentId: '', patientName: ''),
   AppRoutes.doctor: (context) => DoctorHomeScreen(),
 
   ///

@@ -90,7 +90,7 @@ class DoneAppointmentFullinformation extends StatelessWidget {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return const DiagnoseDialoge();
+                                          return Container();
                                         },
                                       );
                                     })

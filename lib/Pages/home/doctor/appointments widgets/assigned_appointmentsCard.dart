@@ -43,7 +43,7 @@ class AssignedAppointmentCard extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          const AppointmentFullInformationScreen(),
+                         Container()
                     ),
                   );
                 },

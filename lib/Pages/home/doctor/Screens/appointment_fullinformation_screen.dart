@@ -1,14 +1,18 @@
-import 'dart:core';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/Pages/home/doctor/appointments%20widgets/diagnose_dialog.dart';
 import 'package:ent_clinic/Pages/home/doctor/doctorHomeScreen%20widgets/doctor_drawer.dart';
 import 'package:ent_clinic/Pages/home/doctor/appointments%20widgets/appointment_card.dart';
 import 'package:ent_clinic/core/GeneralWidgets/general.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AppointmentFullInformationScreen extends StatefulWidget {
-  const AppointmentFullInformationScreen({super.key});
+  final String appointmentId;
+  final String patientName;
+
+
+  const AppointmentFullInformationScreen({super.key, required this.appointmentId, required this.patientName});
 
   @override
   State<AppointmentFullInformationScreen> createState() =>
@@ -17,174 +21,156 @@ class AppointmentFullInformationScreen extends StatefulWidget {
 
 class _AppointmentFullInformationScreenState
     extends State<AppointmentFullInformationScreen> {
+  late Future<DocumentSnapshot> appointmentData;
+  late Future<DocumentSnapshot> userData;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  void initState() {
+    super.initState();
+    appointmentData = FirebaseFirestore.instance
+        .collection('appointments')
+        .doc(widget.appointmentId)
+        .get();
+    userData = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
+  }
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return SafeArea(
       child: Scaffold(
-          key: scaffoldKey,
-          appBar: AppBar(
-            title: const Text('Dashboard'),
-            leading: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                scaffoldKey.currentState?.openDrawer();
-              },
-            ),
+        key: scaffoldKey,
+        appBar: AppBar(
+          title: const Text('Dashboard'),
+          leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              scaffoldKey.currentState?.openDrawer();
+            },
           ),
-          drawer: const DoctorDrawer(),
-          body: const Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  AppointmentFullinformationCard(
-                    name: "Hitler",
-                    date: "24/4/2024",
-                    imagepath: "assets/images/profilepic.jpg",
-                    time: "2:00 AM",
-                  ),
-                  InfoCard(
-                    title: 'Medical Information',
-                    data: {},
-                    fields: ['smoker', 'specialMedicalHabits', 'bloodType'],
-                    listFields: {
-                      'drugs': [],
-                      'chronicDiseases': [],
-                      'allergies': [],
-                    },
-                  ),
-                ],
-              ),
-            ),
-          )),
+        ),
+        drawer: const DoctorDrawer(),
+        body: FutureBuilder(
+          future: Future.wait([appointmentData, userData]),
+          builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return AppointmentFullinformationCard(
+                name: widget.patientName,
+                date: snapshot.data![0]['date'].toDate().toString(),
+                imagepath: "assets/images/profilepic.jpg",
+                time: snapshot.data![0]['time'],
+                complaint: snapshot.data![0]['complaint'],
+                userId: userId,
+                userName: snapshot.data![1]['name'],
+                patientId: snapshot.data![0]['patient'],
+                onDiagnosePressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return DiagnoseDialoge(
+                        doctorId: userId,
+                        doctorName: snapshot.data![1]['name'],
+                        patientId: snapshot.data![0]['patient'],
+                        patientName: widget.patientName,
+                      );
+            },);
+            },
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 }
 
 class AppointmentFullinformationCard extends StatelessWidget {
-  const AppointmentFullinformationCard(
-      {super.key,
-      required this.name,
-      required this.date,
-      required this.imagepath,
-      required this.time});
   final String name;
   final String date;
   final String time;
   final String imagepath;
+  final String complaint;
+  final String userId;
+  final String userName;
+  final String patientId;
+  final VoidCallback onDiagnosePressed;
+
+  const AppointmentFullinformationCard({
+    Key? key,
+    required this.name,
+    required this.date,
+    required this.imagepath,
+    required this.time,
+    required this.complaint,
+    required this.userId,
+    required this.userName,
+    required this.patientId,
+    required this.onDiagnosePressed,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Gap(30),
-        Card(
-          color: (Theme.of(context).brightness == Brightness.light)
-              ? const Color(0xFFC8E6FF)
-              : const Color(0xFF004C6E),
-          // color: const Color.fromARGB(255, 11, 79, 215),
-          child: Padding(
-            padding: const EdgeInsets.all(13.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    const CircleAvatar(
-                      radius:
-                          22, // Adjust the radius according to your preference
-                      backgroundImage:
-                          AssetImage("assets/images/profilepic.jpg"),
-                    ),
-                    const Gap(20),
-                    RegularText(
-                      text: "Patient Name: $name",
-                      fontsize: 20,
-                    ),
-                  ],
+                CircleAvatar(
+                  radius: 22,
+                  backgroundImage: AssetImage(imagepath),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Gap(20),
-                        RegularText(text: date),
-                        RegularText(text: time),
-                      ],
-                    ),
-                    Container(
-                        padding: const EdgeInsets.all(10),
-                        width: (MediaQuery.of(context).size.width -
-                            MediaQuery.of(context).size.width / 2.5),
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            RegularText(
-                              text: 'Complains',
-                              fontsize: 30,
-                            ),
-                            const Gap(20),
-                            const Text(
-                              'I\'ve been experiencing a sharp pain in my lower right abdomen for the past few days\n'
-                              'I\'ve noticed a persistent cough that hasn\'t improved with over-the-counter medication.\n',
-                              style: TextStyle(
-                                  fontSize: 16, overflow: TextOverflow.visible),
-                              // Adjust font size as needed
-                            ),
-                            Row(
-                              children: [
-                                Textbuttoncontainer(
-                                    text: "Diagnose",
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return const DiagnoseDialoge();
-                                        },
-                                      );
-                                    })
-
-                                // GestureDetector(
-                                //   child:
-
-                                //   Container(
-                                //     padding: const EdgeInsets.all(20),
-                                //     decoration: BoxDecoration(
-                                //         color: Colors.blue,
-                                //         borderRadius:
-                                //             BorderRadius.circular(20)),
-
-                                //     // color: Colors.amber,
-                                //     child: const Text("Diagnose"),
-                                //   ),
-                                //   onTap: () {
-                                //     showDialog(
-                                //       context: context,
-                                //       builder: (BuildContext context) {
-                                //         return const DiagnoseDialoge();
-                                //       },
-                                //     );
-                                //   },
-                                // )
-                              ],
-                            ),
-                          ],
-                        ))
-                  ],
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Patient",
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                      Text(
+                        "$name",
+                        style: TextStyle(fontSize: 20),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: 20),
+            Text("Date: $date", style: TextStyle(fontSize: 16)),
+            Text("Time: $time", style: TextStyle(fontSize: 16)),
+            const SizedBox(height: 20),
+            Text(
+              'Complaints',
+              style: TextStyle(fontSize: 30),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              complaint,
+              style: TextStyle(fontSize: 16),
+              overflow: TextOverflow.visible,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: onDiagnosePressed,
+              child: Text("Diagnose"),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
-

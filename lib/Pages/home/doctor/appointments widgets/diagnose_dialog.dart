@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/core/GeneralWidgets/general.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,18 @@ import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 class DiagnoseDialoge extends StatefulWidget {
-  const DiagnoseDialoge({super.key});
+  final String doctorId;
+  final String doctorName;
+  final String patientId;
+  final String patientName;
+
+  const DiagnoseDialoge({
+    required this.doctorId,
+    required this.doctorName,
+    required this.patientId,
+    required this.patientName,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DiagnoseDialoge> createState() => _DiagnoseDialogeState();
@@ -102,12 +114,10 @@ class _DiagnoseDialogeState extends State<DiagnoseDialoge> {
   List<String?> selectedTest_Images = [];
 
   final _descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      // surfaceTintColor: (Theme.of(context).brightness == Brightness.light)
-      //     ? const Color(0xFFE8F3FF)
-      //     : const Color(0xFF004C6E),
       backgroundColor: (Theme.of(context).brightness == Brightness.light)
           ? const Color(0xFFE8F3FF)
           : const Color(0xFF004C6E),
@@ -184,16 +194,28 @@ class _DiagnoseDialogeState extends State<DiagnoseDialoge> {
                     ),
                     Textbuttoncontainer(
                       text: "Confirm",
-                      onPressed: () => {
-                        print(selectedMedications),
-                        print(selectededRferrals),
-                        print(selectedDisease),
-                        print(selectedTest_Images),
-                        print(_descriptionController),
-                        Navigator.pop(context)
+                      onPressed: () {
+                        print(selectedMedications);
+                        print(selectededRferrals);
+                        print(selectedDisease);
+                        print(selectedTest_Images);
+                        print(_descriptionController.text);
+
+                        FirebaseFirestore.instance.collection('diagnoses').add({
+                          'doctorId': widget.doctorId,
+                          'doctorName': widget.doctorName,
+                          'patientId': widget.patientId,
+                          'patientName': widget.patientName,
+                          'description': _descriptionController.text,
+                          'medications': selectedMedications,
+                          'referrals': selectededRferrals,
+                          'disease': selectedDisease,
+                          'testImages': selectedTest_Images,
+                        });
+
+                        Navigator.pop(context);
                       },
                     ),
-                    // ,Textbuttoncontainer(text: "Confirm")
                   ],
                 )
               ],
@@ -238,7 +260,6 @@ class _DropDownState extends State<MultiDropDownCustomized> {
           style: const TextStyle(
               // decorationColor: Color(0xFFE8F3FF),
               )),
-      // unselectedColor: const Color(0xFFE8F3FF),
       buttonIcon: const Icon(Icons.add),
       items: widget.items.map((item) => MultiSelectItem(item, item)).toList(),
       selectedColor: const Color.fromARGB(255, 12, 124, 176),
