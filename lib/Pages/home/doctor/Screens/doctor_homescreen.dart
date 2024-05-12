@@ -142,16 +142,16 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen>
                                         ),
                                         trailing: IconButton(
                                           onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AppointmentFullInformationScreen(
-          appointmentId: doc.id,
-          patientName: snapshot.data ?? 'No name', // pass the patient name here
-        ),
-      ),
-    );
-  },
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => AppointmentFullInformationScreen(
+                                                    appointmentId: doc.id,
+                                                    patientName: snapshot.data ?? 'No name', // pass the patient name here
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           icon: const Icon(Icons.arrow_forward),
                                         ),
                                       ),

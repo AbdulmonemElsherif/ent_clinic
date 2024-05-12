@@ -58,7 +58,7 @@ class _AppointmentFullInformationScreenState
           future: Future.wait([appointmentData, userData]),
           builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
@@ -135,13 +135,13 @@ class AppointmentFullinformationCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Patient",
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                       Text(
                         "$name",
-                        style: TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
@@ -150,23 +150,23 @@ class AppointmentFullinformationCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            Text("Date: $date", style: TextStyle(fontSize: 16)),
-            Text("Time: $time", style: TextStyle(fontSize: 16)),
+            Text("Date: $date", style: const TextStyle(fontSize: 16)),
+            Text("Time: $time", style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20),
-            Text(
+            const Text(
               'Complaints',
               style: TextStyle(fontSize: 30),
             ),
             const SizedBox(height: 20),
             Text(
               complaint,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
               overflow: TextOverflow.visible,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: onDiagnosePressed,
-              child: Text("Diagnose"),
+              child: const Text("Diagnose"),
             ),
           ],
         ),
