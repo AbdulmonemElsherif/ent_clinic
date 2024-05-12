@@ -4,13 +4,8 @@ import 'package:ent_clinic/Pages/home/doctor/appointments%20widgets/diagnose_dia
 import 'package:ent_clinic/Pages/home/doctor/doctorHomeScreen%20widgets/doctor_drawer.dart';
 import 'package:ent_clinic/Pages/home/doctor/appointments%20widgets/appointment_card.dart';
 import 'package:ent_clinic/core/GeneralWidgets/general.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 class AppointmentFullInformationScreen extends StatefulWidget {
   const AppointmentFullInformationScreen({super.key});

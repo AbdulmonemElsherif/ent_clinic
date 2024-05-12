@@ -37,9 +37,33 @@ class _DiagnoseDialogeState extends State<DiagnoseDialoge> {
     "Zyvox"
   ];
   List<String> referrals = [
-    "speacialit1",
-    "Speacialit2",
-    "Speacialit3",
+    "Audiologist",
+    "Allergist",
+    "Cardiologist",
+    "Dentist",
+    "Dermatologist",
+    "Endocrinologist",
+    "Gastroenterologist",
+    "Hematologist",
+    "Infectious Disease Specialist",
+    "Internist",
+    "Nephrologist",
+    "Neurologist",
+    "Obstetrician",
+    "Oncologist",
+    "Ophthalmologist",
+    "Orthopedic Surgeon",
+    "Otolaryngologist",
+    "Pediatrician",
+    "Physiatrist",
+    "Plastic Surgeon",
+    "Podiatrist",
+    "Psychiatrist",
+    "Pulmonologist",
+    "Radiologist",
+    "Rheumatologist",
+    "Urologist",
+    "Vascular Surgeon"
   ];
   List<String> disease = [
     "Ear infections (otitis media)",
