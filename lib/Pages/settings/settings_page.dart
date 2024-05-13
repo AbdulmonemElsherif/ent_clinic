@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatelessWidget {
+import '../auth/signin.dart';
+
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool _enableNotifications = false;
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +22,11 @@ class SettingsPage extends StatelessWidget {
         children: <Widget>[
           SwitchListTile(
             title: const Text('Enable Notifications'),
-            value:
-                true, // This would ideally be linked to a state management solution.
+            value: _enableNotifications,
             onChanged: (bool value) {
-              // Handle change in value
+              setState(() {
+                _enableNotifications = value;
+              });
             },
           ),
           ListTile(
@@ -37,10 +47,13 @@ class SettingsPage extends StatelessWidget {
               // Display about us information
             },
           ),
-          ListTile(
+         ListTile(
             title: const Text('Logout'),
             onTap: () {
-              // Display about us information
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => SignInPage()),
+              );
             },
           ),
         ],
