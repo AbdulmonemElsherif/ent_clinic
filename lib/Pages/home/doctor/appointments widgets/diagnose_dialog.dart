@@ -200,8 +200,9 @@ class _DiagnoseDialogeState extends State<DiagnoseDialoge> {
                         print(selectedDisease);
                         print(selectedTest_Images);
                         print(_descriptionController.text);
-
-                        FirebaseFirestore.instance.collection('diagnoses').add({
+                    
+                        // Create a map with the diagnosis details
+                        Map<String, dynamic> diagnosis = {
                           'doctorId': widget.doctorId,
                           'doctorName': widget.doctorName,
                           'patientId': widget.patientId,
@@ -211,9 +212,10 @@ class _DiagnoseDialogeState extends State<DiagnoseDialoge> {
                           'referrals': selectededRferrals,
                           'disease': selectedDisease,
                           'testImages': selectedTest_Images,
-                        });
-
-                        Navigator.pop(context);
+                        };
+                    
+                        // Return the diagnosis details
+                        Navigator.pop(context, diagnosis);
                       },
                     ),
                   ],

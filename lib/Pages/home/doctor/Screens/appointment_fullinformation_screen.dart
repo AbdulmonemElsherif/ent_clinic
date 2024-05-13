@@ -94,7 +94,12 @@ class _AppointmentFullInformationScreenState
                         patientName: widget.patientName,
                       );
                     },
-                  );
+                  ).then((diagnosis) {
+                    // After the dialog is dismissed, diagnose the appointment and move it to history
+                    if (diagnosis != null) {
+                      diagnoseAndMoveToHistory(widget.appointmentId, diagnosis);
+                    }
+                  });
                 },
               );
             }
@@ -103,8 +108,33 @@ class _AppointmentFullInformationScreenState
       ),
     );
   }
-}
-
+  
+  void diagnoseAndMoveToHistory(String appointmentId, Map<String, dynamic> diagnosis) async {
+    // Add the diagnosis to the diagnoses collection
+    await FirebaseFirestore.instance
+        .collection('diagnoses')
+        .doc(appointmentId)
+        .set(diagnosis);
+  
+    // Get the appointment data
+    DocumentSnapshot appointment = await FirebaseFirestore.instance
+        .collection('appointments')
+        .doc(appointmentId)
+        .get();
+  
+    // Add the appointment to the history collection with a 'diagnosed' field
+    await FirebaseFirestore.instance
+        .collection('history')
+        .doc(appointmentId)
+        .set({...appointment.data() as Map<String, dynamic>, 'diagnosed': true});
+  
+    // Delete the appointment from the appointments collection
+    await FirebaseFirestore.instance
+        .collection('appointments')
+        .doc(appointmentId)
+        .delete();
+  }
+    }
 class AppointmentFullinformationCard extends StatelessWidget {
   final String name;
   final String date;
@@ -207,6 +237,12 @@ class AppointmentFullinformationCard extends StatelessWidget {
             ElevatedButton(
               onPressed: onDiagnosePressed,
               child: const Text("Diagnose"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, 'refresh');
+              },
+              child: const Text("Back"),
             ),
           ],
         ),

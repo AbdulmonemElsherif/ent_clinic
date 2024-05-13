@@ -53,20 +53,33 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen>
   Future<List<QueryDocumentSnapshot>> fetchAppointments() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? currentUser = auth.currentUser;
-
+  
     if (currentUser == null) {
       throw Exception('No user is currently logged in');
     }
-    print('Current user ID: ${currentUser.uid}'); // Debugging line
-
-    final QuerySnapshot snapshot = await _firestore
+  
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('appointments')
         .where('doctorID', isEqualTo: currentUser.uid)
         .where('approvalStatus', isEqualTo: 'accepted')
         .get();
-
-    print('Fetched appointments: ${snapshot.docs}'); // Debugging line
-
+  
+    return snapshot.docs;
+  }
+  Future<List<QueryDocumentSnapshot>> fetchHistory() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? currentUser = auth.currentUser;
+  
+    if (currentUser == null) {
+      throw Exception('No user is currently logged in');
+    }
+  
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('history')
+        .where('doctorID', isEqualTo: currentUser.uid)
+        .where('diagnosed', isEqualTo: true) // Include only diagnosed appointments
+        .get();
+  
     return snapshot.docs;
   }
 
@@ -166,8 +179,65 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen>
                       },
                     ),
                     // History tab
-                    const Center(
-                      child: Text('History tab content goes here'),
+                    FutureBuilder<List<QueryDocumentSnapshot>>(
+                      future: fetchHistory(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return ListView.builder(
+                            itemCount: snapshot.data?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              final doc = snapshot.data![index];
+                              return FutureBuilder<String>(
+                                future: fetchPatientName(doc['patient']),
+                                builder: (context, patientSnapshot) {
+                                  if (patientSnapshot.connectionState == ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (patientSnapshot.hasError) {
+                                    return Text('Error: ${patientSnapshot.error}');
+                                  } else {
+                                    return FutureBuilder<DocumentSnapshot>(
+                                      future: FirebaseFirestore.instance.collection('diagnoses').doc(doc.id).get(),
+                                      builder: (context, diagnosisSnapshot) {
+                                        if (diagnosisSnapshot.connectionState == ConnectionState.waiting) {
+                                          return const CircularProgressIndicator();
+                                        } else if (diagnosisSnapshot.hasError) {
+                                          return Text('Error: ${diagnosisSnapshot.error}');
+                                        } else {
+                                          final diagnosisDoc = diagnosisSnapshot.data!;
+                                          return Card(
+                                            child: ListTile(
+                                              title: Text(patientSnapshot.data ?? 'No name'),
+                                              subtitle: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text('Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
+                                                  Text('Complaint: ${doc['complaint']}'),
+                                                  Text('Diagnosed: ${doc['diagnosed'] ? 'Yes' : 'No'}'),
+                                                  Text('Doctor: ${doc['doctor']}'),
+                                                  Text('Reason: ${doc['reason']}'),
+                                                  Text('Diagnosis: ${diagnosisDoc['description']}'),
+                                                  Text('Disease: ${diagnosisDoc['disease'].join(', ')}'),
+                                                  Text('Medications: ${diagnosisDoc['medications'].join(', ')}'),
+                                                  Text('Referrals: ${diagnosisDoc['referrals'].join(', ')}'),
+                                                  // Add more fields here as needed
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),

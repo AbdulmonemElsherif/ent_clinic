@@ -115,6 +115,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
         'patient': widget.patient,
         'complaint': selectedComplaint,
         'approvalStatus': 'pending',
+        'dianosed': false,
       });
       showDialog(
         context: context,
