@@ -6,6 +6,8 @@ import 'package:ent_clinic/core/GeneralWidgets/general.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+
 
 class AppointmentFullInformationScreen extends StatefulWidget {
   final String appointmentId;
@@ -150,7 +152,10 @@ class AppointmentFullinformationCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            Text("Date: $date", style: const TextStyle(fontSize: 16)),
+            Text(
+              "Date: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(date))}",
+              style: const TextStyle(fontSize: 16),
+            ),
             Text("Time: $time", style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20),
             const Text(
