@@ -117,127 +117,125 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen>
               Expanded(
                 child: TabBarView(
                   children: [
-                    // Appointments tab
-                    FutureBuilder<List<QueryDocumentSnapshot>>(
-                      future: fetchAppointments(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return ListView.builder(
-                            itemCount: snapshot.data?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              final doc = snapshot.data![index];
-                              return FutureBuilder<String>(
-                                future: fetchPatientName(doc['patient']),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else {
-                                    return Card(
-                                      child: ListTile(
-                                        title: Text(snapshot.data ?? 'No name'),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                'Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
-                                            Text(
-                                                'Complaint: ${doc['complaint']}'),
-                                          ],
-                                        ),
-                                        trailing: IconButton(
-                                          onPressed: () {
+                    RefreshIndicator(
+                      onRefresh: fetchAppointments,
+                      child: FutureBuilder<List<QueryDocumentSnapshot>>(
+                        future: fetchAppointments(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return ListView.builder(
+                              itemCount: snapshot.data?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final doc = snapshot.data![index];
+                                return FutureBuilder<String>(
+                                  future: fetchPatientName(doc['patient']),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      return Card(
+                                        child: ListTile(
+                                          title: Text(snapshot.data ?? 'No name'),
+                                          subtitle: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
+                                              Text('Complaint: ${doc['complaint']}'),
+                                            ],
+                                          ),
+                                          trailing: IconButton(
+                                            onPressed: () {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) => AppointmentFullInformationScreen(
                                                     appointmentId: doc.id,
-                                                    patientName: snapshot.data ?? 'No name', // pass the patient name here
-                                                    patientId: doc['patient'], // pass the patient
+                                                    patientName: snapshot.data ?? 'No name',
+                                                    patientId: doc['patient'],
                                                   ),
                                                 ),
                                               );
                                             },
-                                          icon: const Icon(Icons.arrow_forward),
+                                            icon: const Icon(Icons.arrow_forward),
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                          );
-                        }
-                      },
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
                     ),
-                    // History tab
-                    FutureBuilder<List<QueryDocumentSnapshot>>(
-                      future: fetchHistory(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return ListView.builder(
-                            itemCount: snapshot.data?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              final doc = snapshot.data![index];
-                              return FutureBuilder<String>(
-                                future: fetchPatientName(doc['patient']),
-                                builder: (context, patientSnapshot) {
-                                  if (patientSnapshot.connectionState == ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (patientSnapshot.hasError) {
-                                    return Text('Error: ${patientSnapshot.error}');
-                                  } else {
-                                    return FutureBuilder<DocumentSnapshot>(
-                                      future: FirebaseFirestore.instance.collection('diagnoses').doc(doc.id).get(),
-                                      builder: (context, diagnosisSnapshot) {
-                                        if (diagnosisSnapshot.connectionState == ConnectionState.waiting) {
-                                          return const CircularProgressIndicator();
-                                        } else if (diagnosisSnapshot.hasError) {
-                                          return Text('Error: ${diagnosisSnapshot.error}');
-                                        } else {
-                                          final diagnosisDoc = diagnosisSnapshot.data!;
-                                          return Card(
-                                            child: ListTile(
-                                              title: Text(patientSnapshot.data ?? 'No name'),
-                                              subtitle: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text('Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
-                                                  Text('Complaint: ${doc['complaint']}'),
-                                                  Text('Diagnosed: ${doc['diagnosed'] ? 'Yes' : 'No'}'),
-                                                  Text('Doctor: ${doc['doctor']}'),
-                                                  Text('Reason: ${doc['reason']}'),
-                                                  Text('Diagnosis: ${diagnosisDoc['description']}'),
-                                                  Text('Disease: ${diagnosisDoc['disease'].join(', ')}'),
-                                                  Text('Medications: ${diagnosisDoc['medications'].join(', ')}'),
-                                                  Text('Referrals: ${diagnosisDoc['referrals'].join(', ')}'),
-                                                  // Add more fields here as needed
-                                                ],
+                    RefreshIndicator(
+                      onRefresh: fetchHistory,
+                      child: FutureBuilder<List<QueryDocumentSnapshot>>(
+                        future: fetchHistory(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return ListView.builder(
+                              itemCount: snapshot.data?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final doc = snapshot.data![index];
+                                return FutureBuilder<String>(
+                                  future: fetchPatientName(doc['patient']),
+                                  builder: (context, patientSnapshot) {
+                                    if (patientSnapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (patientSnapshot.hasError) {
+                                      return Text('Error: ${patientSnapshot.error}');
+                                    } else {
+                                      return FutureBuilder<DocumentSnapshot>(
+                                        future: FirebaseFirestore.instance.collection('diagnoses').doc(doc.id).get(),
+                                        builder: (context, diagnosisSnapshot) {
+                                          if (diagnosisSnapshot.connectionState == ConnectionState.waiting) {
+                                            return const CircularProgressIndicator();
+                                          } else if (diagnosisSnapshot.hasError) {
+                                            return Text('Error: ${diagnosisSnapshot.error}');
+                                          } else {
+                                            final diagnosisDoc = diagnosisSnapshot.data!;
+                                            return Card(
+                                              child: ListTile(
+                                                title: Text(patientSnapshot.data ?? 'No name'),
+                                                subtitle: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('Appointment on ${DateFormat('yyyy-MM-dd h:mm a').format(doc['date'].toDate())}'),
+                                                    Text('Complaint: ${doc['complaint']}'),
+                                                    Text('Diagnosed: ${doc['diagnosed'] ? 'Yes' : 'No'}'),
+                                                    Text('Doctor: ${doc['doctor']}'),
+                                                    Text('Reason: ${doc['reason']}'),
+                                                    Text('Diagnosis: ${diagnosisDoc['description']}'),
+                                                    Text('Disease: ${diagnosisDoc['disease'].join(', ')}'),
+                                                    Text('Medications: ${diagnosisDoc['medications'].join(', ')}'),
+                                                    Text('Referrals: ${diagnosisDoc['referrals'].join(', ')}'),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                          );
-                        }
-                      },
+                                            );
+                                          }
+                                        },
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

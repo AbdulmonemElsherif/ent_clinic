@@ -235,7 +235,10 @@ class AppointmentFullinformationCard extends StatelessWidget {
             Text("Allergies: $allergies", style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: onDiagnosePressed,
+              onPressed: () async {
+                onDiagnosePressed();
+                Navigator.pop(context, 'refresh');
+              },
               child: const Text("Diagnose"),
             ),
             ElevatedButton(
