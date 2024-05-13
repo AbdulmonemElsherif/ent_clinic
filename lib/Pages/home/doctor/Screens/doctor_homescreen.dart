@@ -148,6 +148,7 @@ class _DoctorHomeScreenState extends State<DoctorHomeScreen>
                                                   builder: (context) => AppointmentFullInformationScreen(
                                                     appointmentId: doc.id,
                                                     patientName: snapshot.data ?? 'No name', // pass the patient name here
+                                                    patientId: doc['patient'], // pass the patient
                                                   ),
                                                 ),
                                               );

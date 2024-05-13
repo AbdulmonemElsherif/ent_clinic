@@ -8,13 +8,12 @@ import 'package:gap/gap.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-
 class AppointmentFullInformationScreen extends StatefulWidget {
   final String appointmentId;
   final String patientName;
+  final String patientId;
 
-
-  const AppointmentFullInformationScreen({super.key, required this.appointmentId, required this.patientName});
+  const AppointmentFullInformationScreen({super.key, required this.appointmentId, required this.patientName, required this.patientId});
 
   @override
   State<AppointmentFullInformationScreen> createState() =>
@@ -25,6 +24,7 @@ class _AppointmentFullInformationScreenState
     extends State<AppointmentFullInformationScreen> {
   late Future<DocumentSnapshot> appointmentData;
   late Future<DocumentSnapshot> userData;
+  late Future<DocumentSnapshot> patientMedicalInfo; // Add this line
   final String userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -37,6 +37,10 @@ class _AppointmentFullInformationScreenState
     userData = FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
+        .get();
+    patientMedicalInfo = FirebaseFirestore.instance // Add these lines
+        .collection('users')
+        .doc(widget.patientId)
         .get();
   }
 
@@ -57,7 +61,7 @@ class _AppointmentFullInformationScreenState
         ),
         drawer: const DoctorDrawer(),
         body: FutureBuilder(
-          future: Future.wait([appointmentData, userData]),
+          future: Future.wait([appointmentData, userData, patientMedicalInfo]), // Update this line
           builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -73,6 +77,12 @@ class _AppointmentFullInformationScreenState
                 userId: userId,
                 userName: snapshot.data![1]['name'],
                 patientId: snapshot.data![0]['patient'],
+                smoker: snapshot.data![2]['smoker'], // Add these lines
+                specialMedicalHabits: snapshot.data![2]['specialMedicalHabits'],
+                chronicDiseases: snapshot.data![2]['chronicDiseases'].join(', '),
+                drugs: snapshot.data![2]['drugs'].join(', '),
+                bloodType: snapshot.data![2]['bloodType'],
+                allergies: snapshot.data![2]['allergies'].join(', '),
                 onDiagnosePressed: () {
                   showDialog(
                     context: context,
@@ -83,8 +93,9 @@ class _AppointmentFullInformationScreenState
                         patientId: snapshot.data![0]['patient'],
                         patientName: widget.patientName,
                       );
-            },);
-            },
+                    },
+                  );
+                },
               );
             }
           },
@@ -103,6 +114,12 @@ class AppointmentFullinformationCard extends StatelessWidget {
   final String userId;
   final String userName;
   final String patientId;
+  final String smoker; // Add these lines
+  final String specialMedicalHabits;
+  final String chronicDiseases;
+  final String drugs;
+  final String bloodType;
+  final String allergies;
   final VoidCallback onDiagnosePressed;
 
   const AppointmentFullinformationCard({
@@ -115,6 +132,12 @@ class AppointmentFullinformationCard extends StatelessWidget {
     required this.userId,
     required this.userName,
     required this.patientId,
+    required this.smoker, // Add these lines
+    required this.specialMedicalHabits,
+    required this.chronicDiseases,
+    required this.drugs,
+    required this.bloodType,
+    required this.allergies,
     required this.onDiagnosePressed,
   }) : super(key: key);
 
@@ -168,6 +191,18 @@ class AppointmentFullinformationCard extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
               overflow: TextOverflow.visible,
             ),
+            const SizedBox(height: 20),
+            const Text(
+              'Medical Information',
+              style: TextStyle(fontSize: 30),
+            ),
+            const SizedBox(height: 20),
+            Text("Smoker: $smoker", style: const TextStyle(fontSize: 16)),
+            Text("Special Medical Habits: $specialMedicalHabits", style: const TextStyle(fontSize: 16)),
+            Text("Chronic Diseases: $chronicDiseases", style: const TextStyle(fontSize: 16)),
+            Text("Drugs: $drugs", style: const TextStyle(fontSize: 16)),
+            Text("Blood Type: $bloodType", style: const TextStyle(fontSize: 16)),
+            Text("Allergies: $allergies", style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: onDiagnosePressed,
