@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ent_clinic/Pages/Patient/appointment_card.dart';
-import 'package:ent_clinic/Pages/Patient/prescription_card.dart';
 import 'package:ent_clinic/Pages/Patient/history_appointment_card.dart';
 
 class PatientDashboardPage extends StatefulWidget {
@@ -17,9 +16,24 @@ class PatientDashboardPage extends StatefulWidget {
 
 class _PatientDashboardPageState extends State<PatientDashboardPage> {
   int activeIndex = 0;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late Stream<QuerySnapshot> historyData;
 
+  @override
+  void initState() {
+    super.initState();
+    historyData = FirebaseFirestore.instance
+        .collection('history')
+        .where('patient', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
+  }
+Future<List<QueryDocumentSnapshot>> fetchHistory() async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('history')
+      .where('patient', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .get();
+  return querySnapshot.docs;
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +57,6 @@ class _PatientDashboardPageState extends State<PatientDashboardPage> {
             children: const {
               0: Text("Appointments"),
               1: Text("Med History"),
-              2: Text("Prescription"),
             },
             onValueChanged: (value) {
               setState(() {
@@ -61,11 +74,10 @@ class _PatientDashboardPageState extends State<PatientDashboardPage> {
                 if (!snapshot.hasData) return const CircularProgressIndicator();
                 return Column(
                   children: snapshot.data!.docs.map((DocumentSnapshot doc) {
-                    // Check if the appointment belongs to the current patient
                     if (doc['patient'] == FirebaseAuth.instance.currentUser!.uid) {
                       return AppointmentCard(appointment: doc);
                     } else {
-                      return Container();  // Return an empty container for other patients' appointments
+                      return Container();
                     }
                   }).toList(),
                 );
@@ -74,29 +86,28 @@ class _PatientDashboardPageState extends State<PatientDashboardPage> {
           ],
           if (activeIndex == 1) ...[
             const SizedBox(height: 25),
-            const HistoryAppointmentCard(),
-            const SizedBox(height: 10),
-            const HistoryAppointmentCard(),
-            const SizedBox(height: 10),
-            const HistoryAppointmentCard(),
-            const SizedBox(height: 10),
-            const HistoryAppointmentCard(),
-          ],
-          if (activeIndex == 2) ...[
-            const SizedBox(height: 25),
-            const PrescriptionCard(),
-            const SizedBox(height: 10),
-            const PrescriptionCard(),
-            const SizedBox(height: 10),
-            const PrescriptionCard(),
-            const SizedBox(height: 10),
-            const PrescriptionCard(),
+            FutureBuilder<List<QueryDocumentSnapshot>>(
+              future: fetchHistory(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Column(
+                    children: snapshot.data!.map((QueryDocumentSnapshot doc) {
+                      return HistoryAppointmentCard(historyData: doc);
+                    }).toList(),
+                  );
+                }
+              },
+            ),
           ],
         ],
       ),
-      floatingActionButton: Positioned(
-        bottom: 80.0,
-        right: 16.0,
+      floatingActionButton: Container(
+        alignment: Alignment.bottomRight,
+        margin: EdgeInsets.only(bottom: 80.0, right: 16.0),
         child: FloatingActionButton(
           onPressed: () {
             Navigator.push(

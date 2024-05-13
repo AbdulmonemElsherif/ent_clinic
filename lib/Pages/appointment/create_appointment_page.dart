@@ -127,6 +127,7 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 child: const Text('OK'),
               ),
