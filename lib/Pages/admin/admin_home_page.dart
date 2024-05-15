@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/Pages/admin/api.dart';
+import 'package:ent_clinic/Pages/admin/widgets/add_btn.dart';
 import 'package:ent_clinic/Pages/admin/widgets/list_of_appointments.dart';
+import 'package:ent_clinic/core/routes/routes.dart';
 import 'package:ent_clinic/core/widgets/welcome_back_header.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +48,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       child: Column(
                         children: [
                           ListOfAppointments(appointments: allAppointments),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 12),
                           const ChartWidget(
                             title: 'Monthly Appointments',
                             monthlyAppointments: {
@@ -56,6 +57,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
                               '3rd': 130,
                               '4th': 20,
                             },
+                          ),
+                          const SizedBox(height: 12),
+                          const AddBtn(
+                            label: 'Admin',
+                            route: AppRoutes.addAdmin,
+                          ),
+                          const SizedBox(height: 12),
+                          const AddBtn(
+                            label: 'Doctor',
+                            route: AppRoutes.addDoctor,
                           ),
                         ],
                       ),

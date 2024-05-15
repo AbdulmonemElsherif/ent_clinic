@@ -76,37 +76,45 @@ class AdminAppointmentCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.check_circle_outline),
-                                color: Colors.green,
-                                onPressed: () {
-                                  if (appointment['id'] != null) {
-                                    setAppointmentStatusAccepted(appointment['id']);
-                                  } else {
-                                    print('Error: appointment ID is null');
-                                  }
-                                },
-                                tooltip: 'Accept Appointment',
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.cancel_outlined),
-                                color: Colors.red,
-                                onPressed: () {
-                                  if (appointment['id'] != null) {
-                                    setAppointmentStatusRejected(appointment['id']);
-                                  } else {
-                                    print('Error: appointment ID is null');
-                                  }
-                                },
-                                tooltip: 'Cancel Appointment',
-                              ),
-                            ],
-                          )
-                        ],
+                          appointment['approvalStatus'] == 'accepted' ||
+                                  appointment['approvalStatus'] == 'rejected'
+                              ? const SizedBox.shrink()
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(
+                                          Icons.check_circle_outline),
+                                      color: Colors.green,
+                                      onPressed: () {
+                                        if (appointment['id'] != null) {
+                                          setAppointmentStatusAccepted(
+                                              appointment['id']);
+                                        } else {
+                                          print(
+                                              'Error: appointment ID is null');
+                                        }
+                                      },
+                                      tooltip: 'Accept Appointment',
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.cancel_outlined),
+                                      color: Colors.red,
+                                      onPressed: () {
+                                        if (appointment['id'] != null) {
+                                          setAppointmentStatusRejected(
+                                              appointment['id']);
+                                        } else {
+                                          print(
+                                              'Error: appointment ID is null');
+                                        }
+                                      },
+                                      tooltip: 'Cancel Appointment',
+                                    ),
+                                  ],
+                                )
+                        ,],
                       ),
                       const SizedBox(height: 8),
                       const Divider(),

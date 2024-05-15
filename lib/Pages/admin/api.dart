@@ -10,9 +10,7 @@ Future<String> getAdminName() async {
 }
 
 Stream<QuerySnapshot<Object?>> getAppointments() {
-  return FirebaseFirestore.instance
-      .collection('appointments')
-      .snapshots();
+  return FirebaseFirestore.instance.collection('appointments').snapshots();
 }
 
 Stream<List<Map<String, dynamic>>> getPendingAppointments() {
@@ -21,10 +19,11 @@ Stream<List<Map<String, dynamic>>> getPendingAppointments() {
       .where('approvalStatus', isEqualTo: "pending")
       .snapshots()
       .map((snapshot) => snapshot.docs.map((document) {
-        Map<String, dynamic> appointment = document.data();
-        appointment['id'] = document.id; // Add the document ID to the appointment map
-        return appointment;
-      }).toList());
+            Map<String, dynamic> appointment = document.data();
+            appointment['id'] =
+                document.id; // Add the document ID to the appointment map
+            return appointment;
+          }).toList());
 }
 
 Future<void> setAppointmentStatusAccepted(String appointmentId) async {
@@ -59,32 +58,46 @@ Future<void> setAppointmentStatusRejected(String appointmentId) async {
   }
 }
 
-  Future<Map<String, String>> getUserName(String userId) async {
-    DocumentSnapshot patient = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .get();
+Future<Map<String, String>> getUserName(String userId) async {
+  DocumentSnapshot patient =
+      await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
-    Map<String, String> doctorAndUser = {
-      'patient': patient.get('name'),
-    };
+  Map<String, String> doctorAndUser = {
+    'patient': patient.get('name'),
+  };
 
-    return doctorAndUser;
-  }
+  return doctorAndUser;
+}
 
-Future<void> createDoctor(String email, String password, String speciality) async {
+Future<void> createDoctor({
+  required String email,
+  required String password,
+  required String specialty,
+  required String dob,
+  required String gender,
+  required String name,
+  required String phone,
+}) async {
   try {
     // Create a new user with the Firebase Authentication
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
 
     // Add a new document to the users collection in the Firestore database
-    await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .set({
       'email': email,
       'role': 'doctor',
-      'speciality': speciality,
+      'speciality': specialty,
+      'dob': dob,
+      'phone': phone,
+      'name': name,
+      'gender': gender,
     });
 
     print("Doctor created successfully.");
@@ -93,10 +106,44 @@ Future<void> createDoctor(String email, String password, String speciality) asyn
     print("Error creating doctor: $e");
   }
 }
+
+Future<void> createAdmin({
+  required String name,
+  required String email,
+  required String password,
+  required String gender,
+}) async {
+  try {
+    // Create a new user with the Firebase Authentication
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Add a new document to the users collection in the Firestore database
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .set({
+      'email': email,
+      'role': 'admin',
+      'name': name,
+      'gender': gender,
+    });
+
+    print("Admin created successfully.");
+  } catch (e) {
+    // Handle errors
+    print("Error creating admin: $e");
+  }
+}
+
 Future<String> getDoctorSpecialization(String doctorId) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  DocumentSnapshot doc = await firestore.collection('users').doc(doctorId).get();
+  DocumentSnapshot doc =
+      await firestore.collection('users').doc(doctorId).get();
 
   if (doc.exists && doc['role'] == 'doctor') {
     return doc['Speciality'];

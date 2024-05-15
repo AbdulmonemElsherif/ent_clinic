@@ -70,7 +70,7 @@ class ChartWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 300,
+            height: 250,
             child: AspectRatio(
               aspectRatio: 16 / 9,
               child: DChartComboO(
