@@ -10,8 +10,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _enableNotifications = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,15 +18,6 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: ListView(
         children: <Widget>[
-          SwitchListTile(
-            title: const Text('Enable Notifications'),
-            value: _enableNotifications,
-            onChanged: (bool value) {
-              setState(() {
-                _enableNotifications = value;
-              });
-            },
-          ),
           ListTile(
             title: const Text('Account Settings'),
             onTap: () {
@@ -47,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
               // Display about us information
             },
           ),
-         ListTile(
+          ListTile(
             title: const Text('Logout'),
             onTap: () {
               Navigator.pushReplacement(
