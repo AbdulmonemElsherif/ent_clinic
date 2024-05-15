@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/Pages/appointment/create_appointment_page.dart';
+import 'package:ent_clinic/Pages/home/contact_us/contact_us.dart';
 import 'package:ent_clinic/Pages/profile/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
             title: const Text('Contact Us'),
             onTap: () {
               Navigator.pop(context);
-              // TODO: Implement contact us page
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  const ContactUsPage()),);
             },
           ),
           const Divider(),
