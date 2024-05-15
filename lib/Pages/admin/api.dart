@@ -2,11 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 Future<String> getAdminName() async {
-  QuerySnapshot adminSnapshot = await FirebaseFirestore.instance
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser == null) {
+    throw Exception('No user is currently signed in');
+  }
+
+  DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
       .collection('users')
-      .where('role', isEqualTo: 'admin')
+      .doc(currentUser.uid)
       .get();
-  return adminSnapshot.docs.first['name'];
+
+  if (!userSnapshot.exists) {
+    throw Exception('User document does not exist');
+  }
+
+  if (userSnapshot['role'] != 'admin') {
+    throw Exception('The current user is not an admin');
+  }
+
+  return userSnapshot['name'];
 }
 
 Stream<QuerySnapshot<Object?>> getAppointments() {
