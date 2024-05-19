@@ -96,8 +96,11 @@ Future<List<QueryDocumentSnapshot>> fetchHistory() async {
                 } else {
                   return Column(
                     children: snapshot.data!.map((QueryDocumentSnapshot doc) {
-                      return HistoryAppointmentCard(historyData: doc);
-                    }).toList(),
+                      return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: HistoryAppointmentCard(historyData: doc),
+    );
+  }).toList(),
                   );
                 }
               },
