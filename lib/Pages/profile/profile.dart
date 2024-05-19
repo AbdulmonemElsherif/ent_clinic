@@ -54,7 +54,7 @@ class ProfilePage extends StatelessWidget {
                         _buildCard(
                           title: 'Patient Information',
                           data: data,
-                          fields: ['name', 'DOB', 'gender', 'email', 'phone'],
+                          fields: ['name', 'dob', 'gender', 'email', 'phone'],
                         ),
                         // Medical Information Card
                         _buildCard(
