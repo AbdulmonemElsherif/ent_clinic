@@ -17,7 +17,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
 
   // Pages to navigate to
   final _widgetOptions = [
-    AdminHomePage(),
+    const AdminHomePage(),
     AdminAppointmentsPage(),
     AdminStatisticsPage(),
     const SettingsPage(),

@@ -46,7 +46,6 @@ class _CreateAppointmentPageState extends State<CreateAppointmentPage> {
     'Nasal Congestion',
     'Runny Nose',
     'Sneezing',
-    'Loss of Smell',
     'Noisy breathing sound',
     'Nasal Obstruction',
     'Nasal Septum Deviation',
