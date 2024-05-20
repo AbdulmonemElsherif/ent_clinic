@@ -73,20 +73,6 @@ class _DoctorDrawerState extends State<DoctorDrawer> {
             },
           ),
           ListTile(
-            title: const Text('My Patients'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Implement navigation to My Patients page
-            },
-          ),
-          ListTile(
-            title: const Text('My Appointments'),
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: Implement navigation to My Appointments page
-            },
-          ),
-          ListTile(
             title: const Text('My Profile'),
             onTap: () {
               Navigator.pop(context);

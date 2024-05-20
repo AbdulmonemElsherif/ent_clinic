@@ -84,12 +84,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
             },
           ),
           ListTile(
-            title: const Text('Services'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
             title: const Text('About Us'),
             onTap: () {
               Navigator.pop(context);
