@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ent_clinic/Pages/admin/api.dart';
 import 'package:ent_clinic/Pages/admin/widgets/add_btn.dart';
 import 'package:ent_clinic/Pages/admin/widgets/list_of_appointments.dart';
@@ -15,6 +16,33 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
+  late Future<Map<String, int>> monthlyAppointments;
+
+  @override
+  void initState() {
+    super.initState();
+    monthlyAppointments = fetchMonthlyAppointments();
+  }
+
+  Future<Map<String, int>> fetchMonthlyAppointments() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('appointments').get();
+
+    Map<String, int> monthlyCounts = {};
+
+    for (var doc in snapshot.docs) {
+      DateTime date = (doc['date'] as Timestamp).toDate();
+      String month = date.month.toString();
+
+      if (monthlyCounts.containsKey(month)) {
+        monthlyCounts[month] = monthlyCounts[month]! + 1;
+      } else {
+        monthlyCounts[month] = 1;
+      }
+    }
+
+    return monthlyCounts;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
@@ -49,13 +77,20 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         children: [
                           ListOfAppointments(appointments: allAppointments),
                           const SizedBox(height: 12),
-                          const ChartWidget(
-                            title: 'Monthly Appointments',
-                            monthlyAppointments: {
-                              '1st': 88,
-                              '2nd': 76,
-                              '3rd': 130,
-                              '4th': 20,
+                          FutureBuilder<Map<String, int>>(
+                            future: monthlyAppointments,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                Map<String, int> monthlyCounts = snapshot.data!;
+                                return ChartWidget(
+                                  title: 'Monthly Appointments',
+                                  monthlyAppointments: monthlyCounts,
+                                );
+                              }
                             },
                           ),
                           const SizedBox(height: 12),

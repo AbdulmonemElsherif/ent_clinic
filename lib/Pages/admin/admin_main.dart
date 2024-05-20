@@ -1,7 +1,7 @@
 import 'package:ent_clinic/Pages/admin/admin_home_page.dart';
 import 'package:ent_clinic/Pages/admin/admin_appointments_page.dart';
 import 'package:ent_clinic/Pages/admin/admin_statistics_page.dart';
-import 'package:ent_clinic/Pages/settings/settings_page.dart';
+import 'package:ent_clinic/Pages/auth/signin.dart';
 import 'package:ent_clinic/core/routes/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
     const AdminHomePage(),
     AdminAppointmentsPage(),
     AdminStatisticsPage(),
-    const SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -29,6 +28,12 @@ class _AdminMainPageState extends State<AdminMainPage> {
     });
   }
 
+  void _logout() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SignInPage()),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,16 +56,16 @@ class _AdminMainPageState extends State<AdminMainPage> {
             icon: Icon(Icons.bar_chart),
             label: 'Statistics',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: Colors.blue[800],
         unselectedItemColor: Colors.grey[600],
-        backgroundColor: Colors.blue[900],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _logout,
+        child: Icon(Icons.logout),
+        
       ),
     );
   }
